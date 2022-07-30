@@ -42,7 +42,7 @@ elif age >= 16:
 
         if choice == 1:
             value += (value * pop)
-            print(f'{name}, o valor edo seu dinheiro aplicado na poupança é R${value}')
+            print(f'{name}, o valor do seu dinheiro aplicado na poupança é R${value}')
         elif choice == 2:
             value += (value * cdb)
             print(f'{name}, o valor do seu dinheiro aplicado no CDB é R${value}')
