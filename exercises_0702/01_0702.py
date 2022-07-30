@@ -1,37 +1,32 @@
 """
-Leia uma matriz  4x4, e escreva quantos valores maiores que 10 ela possui.
+Leia uma matriz  4x4, e escreva quantos valores maiores que 10 ele possui.
 """
-import numpy as np
 from random import randint
 
-size_column: int = 4
-size_row: int = 4
-column: list = []
-row: list = []
-index_a: int = 0
-index_b: int = 0
+range_size: int = 4
+randon_size: int = 30
+matrix: list = [[],[], [], []]
 
-while index_a < size_column:
-    column.append(randint(0, 50))
-    index_a+=1
+for l in range(0, range_size):
+    for c in range(0, range_size):
+        matrix[l].append(randint(0, randon_size))
+        matrix[c].append(randint(0, randon_size))
 
 
-while index_b < size_row:
-    row.append(randint(0, 50))
-    index_b+=1
+print('=-' * 30)
+
+for l in range(0,range_size):
+    for c in range(0, range_size):
+        print(f'[{matrix[l][c]:^6}]', end = '') 
+        # :^6 -> Nº define o número de casas decimais e ^ define como centralizado
+    print()
+
+counter:int = 0 
+
+for l in range(0, range_size):
+    for c in range(0, range_size):
+        if matrix[l][c] > 10:
+            counter+=1
 
 
-print(column)
-print(row)
-print('---------------------------')
-
-A = np.array([column, row])
-print(A)
-
-contador: int = 0
-for i in A:
-    if i >= 10:
-        contador+=1
-
-
-print(contador)
+print(counter)
