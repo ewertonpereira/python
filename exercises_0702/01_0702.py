@@ -5,6 +5,7 @@ from random import randint
 
 range_size: int = 4
 randon_size: int = 30
+number_base: int = 10
 matrix: list = [[],[], [], []]
 
 for l in range(0, range_size):
@@ -25,8 +26,9 @@ counter:int = 0
 
 for l in range(0, range_size):
     for c in range(0, range_size):
-        if matrix[l][c] > 10:
+        if matrix[l][c] > number_base:
             counter+=1
 
 
-print(counter)
+print('')
+print(f'A quantidade de números que são maiores que {number_base} são: {counter} ')
