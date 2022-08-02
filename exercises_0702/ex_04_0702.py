@@ -15,10 +15,10 @@ def create_array_matrices(size_matrix: int) -> list[list]:
 
 
 # add random integer numbers in the matrix
-def add_numbers_matrix(matrix: list) -> list[int]:
+def add_numbers_matrix(matrix: list, max_rand: int) -> list[int]:
     for row in range(len(matrix)):
         for column in range(len(matrix)):
-            matrix[row].append(randint(0,50))
+            matrix[row].append(randint(0, max_rand))
 
 
     return matrix
@@ -51,8 +51,9 @@ def local_number(matrix: list) -> None:
 # data for this file
 if __name__ == '__main__':
     size_matrix: int = 4
+    max_rand: int = 50
     matrix: list = create_array_matrices(size_matrix)
-    add_numbers_matrix(matrix)
+    add_numbers_matrix(matrix, max_rand)
     show_matrix(matrix)
     local_number(matrix)
-    
+      
