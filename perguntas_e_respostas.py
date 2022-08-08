@@ -7,7 +7,7 @@ questions: dict = {
             'c': '4',
             'd': '63'
         }, 
-        'corect_answer': 'c'
+        'correct_answer': 'c'
     },
     '02': {
         'question': 'Quem descobriu a américa?',
@@ -17,7 +17,7 @@ questions: dict = {
             'c': 'Cristóvão Colombo',
             'd': 'Bartolomeu Dias'
         }, 
-        'corect_answer': 'a'
+        'correct_answer': 'a'
     },
     '03': {
         'question': 'Qual o nome da galáxia em que está o sistema solar?',
@@ -27,7 +27,7 @@ questions: dict = {
             'c': 'Andrômeda',
             'd': 'Via Láctea'
         }, 
-        'corect_answer': 'd'
+        'correct_answer': 'd'
     },
     '04': {
         'question': 'Quem é o lateral direito titular do Brasil na copa do mundo 2002?',
@@ -37,7 +37,7 @@ questions: dict = {
             'c': 'Cafu',
             'd': 'Daniel Alves'
         }, 
-        'corect_answer': 'c'
+        'correct_answer': 'c'
     },
     '05': {
         'question': 'Quanto é 3 + 5 * 2?',
@@ -47,7 +47,7 @@ questions: dict = {
             'c': '16',
             'd': '17'
         }, 
-        'corect_answer': 'a'
+        'correct_answer': 'a'
     },
     '06': {
         'question': 'O tomate é?',
@@ -57,7 +57,7 @@ questions: dict = {
             'c': 'Um tubérculo',
             'd': 'Um vegetal'
         }, 
-        'corect_answer': 'b'
+        'correct_answer': 'b'
     },
     '07': {
         'question': 'Qual desses animais não é um mamífero?',
@@ -67,7 +67,7 @@ questions: dict = {
             'c': 'Tamanduá',
             'd': 'Hipopótamo'
         }, 
-        'corect_answer': 'a'
+        'correct_answer': 'a'
     },
     '08': {
         'question': 'Quantos olhos tem um ciclope na mitologia grega?',
@@ -77,7 +77,7 @@ questions: dict = {
             'c': '2',
             'd': '1'
         }, 
-        'corect_answer': 'd'
+        'correct_answer': 'd'
     },
     '09': {
         'question': 'Quantos estados possui a regição sul do Brasil?',
@@ -87,7 +87,7 @@ questions: dict = {
             'c': '3',
             'd': '4'
         }, 
-        'corect_answer': 'c'
+        'correct_answer': 'c'
     },
     '10': {
         'question': 'As _______ são responsáveis pela produção de energia para todo o orgânismo.',
@@ -97,13 +97,29 @@ questions: dict = {
             'c': 'Bactérias',
             'd': 'Companias elétricas'
         }, 
-        'corect_answer': 'b'
+        'correct_answer': 'b'
     },
 }
+
+correct_answers: int = 0
 
 # show questions and answers
 for question_key, question_value in questions.items():
     print(f'{question_key} - {question_value["question"]}')
-   
+    #print('')
+
     for answer_key, answer_value in question_value['answers'].items():
         print(f'{answer_key} - {answer_value}')
+
+
+    user_answers: str = input('\nDigite sua escolha: ')
+
+    if user_answers == question_value['correct_answer']:
+        print('\nVocê acertou!')
+        correct_answers += 1
+    else:
+        print(f'\nVocê errou! A resposta certa é : {question_value["correct_answer"]}')
+    print('')
+
+
+print(f'Percentual de acerto: {(resul := (correct_answers / (number_questions := (len(questions))) * 100))} %')
