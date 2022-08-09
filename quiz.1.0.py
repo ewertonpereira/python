@@ -30,7 +30,7 @@ questions: dict = {
         'correct_answer': 'd'
     },
     '04': {
-        'question': 'Quem é o lateral direito titular do Brasil na copa do mundo 2002?',
+        'question': 'Quem foi o lateral direito titular do Brasil na copa do mundo 2002?',
         'answers': {
             'a': 'Belleti',
             'b': 'Maicon',
