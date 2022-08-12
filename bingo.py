@@ -1,4 +1,5 @@
 from random import randint, shuffle
+import numpy
 
 # emojis
 # https://unicode.org/emoji/charts/full-emoji-list.html
@@ -37,7 +38,7 @@ def create_bingo_card(matrix: list) -> list[list[int]]:
     for row in range(len(bingo_card)):
         for column in range(len(bingo_card)):
             if row == 2 and column == 2:
-                bingo_card[row].append('\U0001F505')
+                bingo_card[row].append('x')
             elif column == 0:
                 shuffle(matrix[0])
                 bingo_card[row].append(element := matrix[0].pop())
@@ -83,6 +84,11 @@ if __name__ == '__main__':
     bingo: list[list[int]] = [b, i, n, g, o]
     bingo_card: list[list[int]] = create_bingo_card(bingo)
 
-    show_matrix(bingo_card)
 
-    
+    show_matrix(bingo_card)
+ 
+
+    var  = 33
+
+    var2 = list(map(lambda x: 'x' if x == var else x, bingo_card))
+    print(var2)
