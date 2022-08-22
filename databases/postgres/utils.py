@@ -9,8 +9,8 @@ def conectar():
         conn = psycopg2.connect(
             database='pypostgres',
             host='localhost',
-            user='admin',
-            password='admin'
+            user='Admin',
+            password='Admin'
         )
         return conn
     except psycopg2.Error as e:
