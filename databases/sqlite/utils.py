@@ -1,28 +1,28 @@
-import psycopg2
+import sqlite3
 
 
 def conectar():
     """
     Função para conectar ao servidor
     """
-    try:
-        conn = psycopg2.connect(
-            database='pypostgres',
-            host='localhost',
-            user='admin',
-            password='admin'
-        )
-        return conn
-    except psycopg2.Error as e:
-        print(f'Erro na conecxão ao PostgreSQL Server: {e}')
+    conn = sqlite3.connect('pysqlite.ewerton')
+
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS produtos(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT NOT NULL,
+            preco REAL NOT NULL,
+            estoque INTEGER NOT NULL
+        );"""
+    )
+    return conn
 
 
 def desconectar(conn):
     """ 
     Função para desconectar do servidor.
     """
-    if conn:
-        conn.close()
+    conn.close()
 
 
 def listar():
@@ -44,8 +44,8 @@ def listar():
             print(f'Estoque: {produto[3]}')
             print('')
     else:
-        print('Não existem produtos cadastrados.')
-    desconectar(conn)
+        print('Não existem produtos cadastrados')
+        desconectar(conn)
 
 
 def inserir():
@@ -56,16 +56,16 @@ def inserir():
     cursor = conn.cursor()
 
     nome = input('Informe o nome do produto: ')
-    preco = float(input('Informe o valor do produto: '))
+    preco = float(input('Informe o preço do produto: '))
     estoque = int(input('Informe a quantidade em estoque: '))
 
-    cursor.execute(f"INSERT INTO produtos(nome, preco, estoque) VALUES ('{nome}', {preco}, {estoque})")
-    conn. commit()
+    cursor.execute(f"INSERT INTO produtos (nome, preco, estoque) VALUES ('{nome}', {preco}, {estoque})")
+    conn.commit()
 
     if cursor.rowcount == 1:
-        print(f'O produto {nome} foi inserido com sucesso!')
+        print(f'Produto {nome} foi inserido com sucesso!')
     else:
-        print('Não foi possível inserir o produto.')
+        print('Não foi possível inserir o produto')
     desconectar(conn)
 
 
@@ -76,18 +76,18 @@ def atualizar():
     conn = conectar()
     cursor = conn.cursor()
 
-    _id = int(input('Informe o código do produto: '))
+    _id = int(input('Digite o código do produto: '))
     nome = input('Informe o nome do produto: ')
-    preco = float(input('Informe o valor do produto: '))
+    preco = float(input('Informe o preço do produto: '))
     estoque = int(input('Informe a quantidade em estoque: '))
 
     cursor.execute(f"UPDATE produtos SET nome='{nome}', preco={preco}, estoque={estoque} WHERE id={_id}")
     conn.commit()
 
     if cursor.rowcount == 1:
-        print(f'O produto {nome} foi atualizado com sucesso!')
+        print(f'Produto {nome} foi atualizado com sucesso!')
     else:
-        print('Errro ao atualizar o produto.')
+        print('Não foi possível atualizar o produto')
     desconectar(conn)
 
 
@@ -98,15 +98,15 @@ def deletar():
     conn = conectar()
     cursor = conn.cursor()
 
-    _id = int(input('Informe o código do produto: '))
+    _id = int(input('Digite o código do produto: '))
 
     cursor.execute(f'DELETE FROM produtos WHERE id={_id}')
     conn.commit()
-
+    
     if cursor.rowcount == 1:
-        print(f'Produto excluído com sucesso!')
+        print(f'Produto {id} foi excluído com sucesso!')
     else:
-        print(f'Erro ao excluir o produto com código {id}')
+        print('Não foi possível excluír o produto')
     desconectar(conn)
 
 
