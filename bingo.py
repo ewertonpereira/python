@@ -1,8 +1,9 @@
+import copy
 from random import randint, shuffle
-import numpy
+import os
 
-# emojis
-# https://unicode.org/emoji/charts/full-emoji-list.html
+
+clear = lambda: os.system('cls')
 
 # create a matrix of matrices
 def create_array_matrices(size_matrix: int) -> list[list]:
@@ -71,6 +72,50 @@ def show_matrix(matrix: list) -> None:
 
 
     print('=' * 29)
+    print('')
+
+
+# check if the number raffled is on the card
+def check_number(bingo_card: list[list], number: int) -> None:
+
+        for row in range(len(bingo_card)):
+            for column in range(len(bingo_card)):
+                if bingo_card[row][column] == number:
+                    bingo_card[row][column] = 'x'
+
+
+def raffle(card: list[list]) -> int:
+
+    for row in range(len(card[0])):
+        for column in range(len(card)):
+            bingo: list[int] = ['b', 'i', 'n', 'g', 'o']
+            shuffle(bingo)
+
+            if bingo[0] == 'b':
+                shuffle(card[0])
+                if len(card[0]) >= 0:
+                    print(f'B - {(element := card[0].pop())}\n'.center(29))
+                    return element
+            elif bingo[0] == 'i':
+                shuffle(card[1])
+                if len(card[1]) >= 0:
+                    print(f'I - {(element := card[1].pop())}\n'.center(29))
+                    return element
+            elif bingo[0] == 'n':
+                shuffle(card[2])
+                if len(card[2]) >= 0:
+                    print(f'N - {(element := card[2].pop())}\n'.center(29))
+                    return  element
+            elif bingo[0] == 'g':
+                shuffle(card[3])
+                if len(card[3]) >= 0:
+                    print(f'G - {(element := card[3].pop())}\n'.center(29))
+                    return element
+            elif bingo[0] == '0':
+                shuffle(card[4])
+                if len(card[4]) >= 0:
+                    print(f'O - {(element := card[4].pop())}\n'.center(29))
+                    return element
 
 
 if __name__ == '__main__': 
@@ -82,13 +127,18 @@ if __name__ == '__main__':
     o: list = add_numbers_list(61, 75)
 
     bingo: list[list[int]] = [b, i, n, g, o]
+    bingo_raffle = copy.deepcopy(bingo)
     bingo_card: list[list[int]] = create_bingo_card(bingo)
 
+    exit_game: bool = False
 
-    show_matrix(bingo_card)
- 
+    while not exit_game:
+        show_matrix(bingo_card)
+        check_number(bingo_card, number := raffle(bingo_raffle))
+        show_matrix(bingo_card)
 
-    var  = 33
+        answer: str = input('sair? ')
+        if answer == 'sim':
+            exit_game = True
+    clear()
 
-    var2 = list(map(lambda x: 'x' if x == var else x, bingo_card))
-    print(var2)
