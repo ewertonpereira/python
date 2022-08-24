@@ -1,8 +1,9 @@
-import copy
 from random import randint, shuffle
+import copy
 import os
 
 
+# clean terminal screen
 clear = lambda: os.system('cls')
 
 # create a matrix of matrices
@@ -30,7 +31,7 @@ def add_numbers_list(min_rand: int, max_rand: int) -> list[int]:
 
     return array
 
-# 
+
 def create_bingo_card(matrix: list) -> list[list[int]]:
     matrix_size:int = 5
     bingo_card: list[list[int]] = create_array_matrices(matrix_size)
@@ -82,6 +83,7 @@ def check_number(bingo_card: list[list], number: int) -> list[list]:
                 bingo_card[row][column] = 'x'
 
 
+# raffle random numbers by letter
 def raffle(card: list[list]) -> int:
     for row in range(len(card[0])):
         for column in range(len(card)):
@@ -133,10 +135,9 @@ if __name__ == '__main__':
         check_number(bingo_card, number := raffle(bingo_raffle))
         show_matrix(bingo_card)
 
-        answer: str = input('sair? ')
-        if answer == 'sim':
+        answer: str = input('Aperte enter para continuar ou digite sair para abandonar a partida: ').lower()
+        if answer == 'sair':
             exit_game = True
         else:
             clear()
     
-
