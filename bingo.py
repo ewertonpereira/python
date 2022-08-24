@@ -32,7 +32,6 @@ def add_numbers_list(min_rand: int, max_rand: int) -> list[int]:
 
 # 
 def create_bingo_card(matrix: list) -> list[list[int]]:
-
     matrix_size:int = 5
     bingo_card: list[list[int]] = create_array_matrices(matrix_size)
     
@@ -76,16 +75,14 @@ def show_matrix(matrix: list) -> None:
 
 
 # check if the number raffled is on the card
-def check_number(bingo_card: list[list], number: int) -> None:
-
-        for row in range(len(bingo_card)):
-            for column in range(len(bingo_card)):
-                if bingo_card[row][column] == number:
-                    bingo_card[row][column] = 'x'
+def check_number(bingo_card: list[list], number: int) -> list[list]:
+    for row in range(len(bingo_card)):
+        for column in range(len(bingo_card)):
+            if bingo_card[row][column] == number:
+                bingo_card[row][column] = 'x'
 
 
 def raffle(card: list[list]) -> int:
-
     for row in range(len(card[0])):
         for column in range(len(card)):
             bingo: list[int] = ['b', 'i', 'n', 'g', 'o']
@@ -129,16 +126,17 @@ if __name__ == '__main__':
     bingo: list[list[int]] = [b, i, n, g, o]
     bingo_raffle = copy.deepcopy(bingo)
     bingo_card: list[list[int]] = create_bingo_card(bingo)
-
     exit_game: bool = False
+    show_matrix(bingo_card)
 
     while not exit_game:
-        show_matrix(bingo_card)
         check_number(bingo_card, number := raffle(bingo_raffle))
         show_matrix(bingo_card)
 
         answer: str = input('sair? ')
         if answer == 'sim':
             exit_game = True
-    clear()
+        else:
+            clear()
+    
 
