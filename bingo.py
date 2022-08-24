@@ -93,27 +93,27 @@ def raffle(card: list[list]) -> int:
 
             if bingo[0] == 'b':
                 shuffle(card[0])
-                if len(card[0]) >= 0:
+                if len(card[0]) > 0:
                     print(f'B - {(element := card[0].pop())}\n'.center(29))
                     return element
             elif bingo[0] == 'i':
                 shuffle(card[1])
-                if len(card[1]) >= 0:
+                if len(card[1]) > 0:
                     print(f'I - {(element := card[1].pop())}\n'.center(29))
                     return element
             elif bingo[0] == 'n':
                 shuffle(card[2])
-                if len(card[2]) >= 0:
+                if len(card[2]) > 0:
                     print(f'N - {(element := card[2].pop())}\n'.center(29))
                     return  element
             elif bingo[0] == 'g':
                 shuffle(card[3])
-                if len(card[3]) >= 0:
+                if len(card[3]) > 0:
                     print(f'G - {(element := card[3].pop())}\n'.center(29))
                     return element
-            elif bingo[0] == '0':
+            elif bingo[0] == 'o':
                 shuffle(card[4])
-                if len(card[4]) >= 0:
+                if len(card[4]) > 0:
                     print(f'O - {(element := card[4].pop())}\n'.center(29))
                     return element
 
