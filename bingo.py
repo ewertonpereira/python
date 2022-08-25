@@ -117,6 +117,76 @@ def raffle(card: list[list]) -> int:
                     return element
 
 
+def check_row(bingo_card: list[list], number: int):
+    adder: int = 0
+    for row in range(len(bingo_card)):
+        for column in range(len(bingo_card)):
+            if row == number:
+                if bingo_card[row][column] == 'x':
+                    adder += 1
+                if adder == 5:
+                    print('BIIIIIINGO!!!')
+                    exit()
+
+
+def check_column(bingo_card: list[list], number: int):
+    adder: int = 0
+    for row in range(len(bingo_card)):
+        for column in range(len(bingo_card)):
+            if column == number:
+                if bingo_card[row][column] == 'x':
+                    adder += 1
+                if adder == 5:
+                    print('BIIIIIINGO!!!')
+                    exit()
+
+
+def check_main_diagonal(bingo_card: list[list]):
+    adder: int = 0
+
+    for row in range(len(bingo_card)):
+        for column in range(len(bingo_card)):
+            if row == column:
+                if bingo_card[row][column] == 'x':
+                    adder += 1
+                if adder == 5:
+                    print('BIIIIIINGO!!!')
+                    exit()
+
+
+def check_secondary_diagonal(bingo_card: list[list]):
+    counter: int = (len(bingo_card) - 1)
+    adder: int = 0
+
+    for row in range(len(bingo_card)):
+        print(bingo_card[row][counter])
+        for column in range(len(bingo_card)):
+            if bingo_card[row][counter] == 'x':
+                adder += 1
+            if adder == 5:
+                print('BIIIIIINGO!!!')
+                exit()
+        counter -= 1
+
+def check_bingo(bingo_card: list[list]) -> str:
+    '''#check row
+    check_row(bingo_card, 0)
+    check_row(bingo_card, 1)
+    check_row(bingo_card, 2)
+    check_row(bingo_card, 3)
+    check_row(bingo_card, 4)
+    #check collumn
+    check_column(bingo_card, 0)
+    check_column(bingo_card, 1)
+    check_column(bingo_card, 2)
+    check_column(bingo_card, 3)
+    check_column(bingo_card, 4)'''
+
+    #check_main_diagonal(bingo_card)
+    check_secondary_diagonal(bingo_card)
+            
+                
+
 if __name__ == '__main__': 
 
     b: list = add_numbers_list(1, 15)
@@ -129,11 +199,12 @@ if __name__ == '__main__':
     bingo_raffle = copy.deepcopy(bingo)
     bingo_card: list[list[int]] = create_bingo_card(bingo)
     exit_game: bool = False
-    show_matrix(bingo_card)
+    #show_matrix(bingo_card)
 
     while not exit_game:
         check_number(bingo_card, number := raffle(bingo_raffle))
         show_matrix(bingo_card)
+        check_bingo(bingo_card)
 
         answer: str = input('Aperte enter para continuar ou digite sair para abandonar a partida: ').lower()
         if answer == 'sair':
@@ -141,3 +212,10 @@ if __name__ == '__main__':
         else:
             clear()
     
+    '''print( f := [['x', 'x', 'x', 'x', 'x'], 
+                ['x', 'x', 'x', 'x', 'x'], 
+                ['x', 'x', 'x', 'x', 'x'], 
+                ['x', 'x', 'x', 'x', 'x'], 
+                ['x', 'x', 'x', 'x', 'x']])
+
+    check_bingo(f)'''
