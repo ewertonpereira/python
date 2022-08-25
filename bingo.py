@@ -7,8 +7,6 @@ import os
 def clear(): return os.system('cls')
 
 # create a matrix of matrices
-
-
 def create_array_matrices(size_matrix: int) -> list[list]:
     matrix: list[list] = []
     index: int = 0
@@ -24,8 +22,6 @@ adds numbers to the list according to the given range
 (e.g.) -> min_rand: 1 | max_rand: 15 
 [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
 """
-
-
 def add_numbers_list(min_rand: int, max_rand: int) -> list[int]:
     matrix: list[int] = []
     while min_rand <= max_rand:
@@ -118,7 +114,7 @@ def raffle(card: list[list]) -> int:
                     return element
 
 
-def check_row(bingo_card: list[list], number: int, name: str):
+def check_each_row(bingo_card: list[list], number: int, name: str):
     adder: int = 0
     for row in range(len(bingo_card)):
         for column in range(len(bingo_card)):
@@ -131,7 +127,7 @@ def check_row(bingo_card: list[list], number: int, name: str):
                     exit()
 
 
-def check_column(bingo_card: list[list], number: int, name: str):
+def check_each_column(bingo_card: list[list], number: int, name: str):
     adder: int = 0
     for row in range(len(bingo_card)):
         for column in range(len(bingo_card)):
@@ -139,7 +135,7 @@ def check_column(bingo_card: list[list], number: int, name: str):
                 if bingo_card[row][column] == 'x':
                     adder += 1
                 if adder == 5:
-                    print('BIIIIIINGO!!!')
+                    print('BIIIIIINGO!!!\n')
                     print(f'Parabéns {name}, você ganhou!')
                     exit()
 
@@ -152,7 +148,7 @@ def check_main_diagonal(bingo_card: list[list], name: str):
                 if bingo_card[row][column] == 'x':
                     adder += 1
                 if adder == 5:
-                    print('BIIIIIINGO!!!')
+                    print('BIIIIIINGO!!!\n')
                     print(f'Parabéns {name}, você ganhou!')
                     exit()
 
@@ -165,24 +161,30 @@ def check_secondary_diagonal(bingo_card: list[list], name: str):
             adder += 1
             counter -= 1
         if adder == 5:
-            print('BIIIIIINGO!!!')
+            print('BIIIIIINGO!!!\n')
             print(f'Parabéns {name}, você ganhou!')
             exit()
 
 
+def check_rows(bingo_card: list[list], name: str) -> None:
+    adder: int = 0
+    while adder <=5:
+        check_each_row(bingo_card, adder, name)
+        adder +=1 
+
+
+def check_columns(bingo_card: list[list], name: str) -> None:
+    adder: int = 0
+    while adder <=5:
+        check_each_column(bingo_card, adder, name)
+        adder +=1
+
+
 def check_bingo(bingo_card: list[list], name: str) -> None:
-    # check row
-    check_row(bingo_card, 0, name)
-    check_row(bingo_card, 1, name)
-    check_row(bingo_card, 2, name)
-    check_row(bingo_card, 3, name)
-    check_row(bingo_card, 4, name)
-    # check collumn
-    check_column(bingo_card, 0, name)
-    check_column(bingo_card, 1, name)
-    check_column(bingo_card, 2, name)
-    check_column(bingo_card, 3, name)
-    check_column(bingo_card, 4, name)
+    # check rows
+    check_rows(bingo_card, name)
+    # check collumns
+    check_columns(bingo_card, name)
     # check main diagonal
     check_main_diagonal(bingo_card, name)
     # check secondary diagonal
@@ -204,15 +206,16 @@ if __name__ == '__main__':
 
     name: str = input('\nDigite seu nome: ')
     clear()
+
     print(f'Olá {name}, está é a sua cartela.\n')
     show_matrix(bingo_card)
 
-    answer: str = input(
-        'Aperte enter para começar ou digite sair para abandonar a partida: ').lower()
+    answer: str = input('Aperte enter para começar ou digite sair para abandonar a partida: ').lower()
     if answer == 'sair':
         exit()
     else:
         clear()
+
 
     while not exit_game:
         check_number(bingo_card, number := raffle(bingo_raffle))
