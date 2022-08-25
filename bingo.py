@@ -159,14 +159,13 @@ def check_secondary_diagonal(bingo_card: list[list]):
     adder: int = 0
 
     for row in range(len(bingo_card)):
-        print(bingo_card[row][counter])
-        for column in range(len(bingo_card)):
             if bingo_card[row][counter] == 'x':
                 adder += 1
+                counter -= 1
             if adder == 5:
                 print('BIIIIIINGO!!!')
                 exit()
-        counter -= 1
+        
 
 def check_bingo(bingo_card: list[list]) -> str:
     '''#check row
