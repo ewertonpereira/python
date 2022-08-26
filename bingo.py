@@ -20,8 +20,7 @@ def create_array_matrices(size_matrix: int) -> list[list]:
 
 
 """
-adds numbers to the list according to the given range
-(e.g.) -> min_rand: 1 | max_rand: 15 
+adds numbers to the list according to the given range(e.g.) -> min_rand: 1 | max_rand: 15 
 [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
 """
 def add_numbers_list(min_rand: int, max_rand: int) -> list[int]:
@@ -187,13 +186,9 @@ def check_columns(bingo_card: list[list], name: str) -> None:
 
 
 def check_bingo(bingo_card: list[list], name: str) -> None:
-    # check rows
     check_rows(bingo_card, name)
-    # check collumns
     check_columns(bingo_card, name)
-    # check main diagonal
     check_main_diagonal(bingo_card, name)
-    # check secondary diagonal
     check_secondary_diagonal(bingo_card, name)
 
 
@@ -246,7 +241,6 @@ def game():
             show_matrix(bingo_card)
             check_bingo(bingo_card, name)
             exit_game = question()
-            #clear()
 
 
     new_game()
