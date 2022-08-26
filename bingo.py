@@ -125,7 +125,7 @@ def check_each_row(bingo_card: list[list], number: int, name: str):
                 if adder == 5:
                     print('BIIIIIINGO!!!\n')
                     print(f'Parabéns {name}, você ganhou!')
-                    exit()
+                    new_game()
 
 
 def check_each_column(bingo_card: list[list], number: int, name: str):
@@ -138,7 +138,7 @@ def check_each_column(bingo_card: list[list], number: int, name: str):
                 if adder == 5:
                     print('BIIIIIINGO!!!\n')
                     print(f'Parabéns {name}, você ganhou!')
-                    exit()
+                    new_game()
 
 
 def check_main_diagonal(bingo_card: list[list], name: str):
@@ -151,7 +151,7 @@ def check_main_diagonal(bingo_card: list[list], name: str):
                 if adder == 5:
                     print('BIIIIIINGO!!!\n')
                     print(f'Parabéns {name}, você ganhou!')
-                    exit()
+                    new_game()
 
 
 def check_secondary_diagonal(bingo_card: list[list], name: str):
@@ -164,8 +164,8 @@ def check_secondary_diagonal(bingo_card: list[list], name: str):
         if adder == 5:
             print('BIIIIIINGO!!!\n')
             print(f'Parabéns {name}, você ganhou!')
-            exit()
-
+            new_game()
+            
 
 def check_rows(bingo_card: list[list], name: str) -> None:
     adder: int = 0
@@ -192,8 +192,28 @@ def check_bingo(bingo_card: list[list], name: str) -> None:
     check_secondary_diagonal(bingo_card, name)
 
 
-if __name__ == '__main__':
+def question() -> bool:
+    answer: str = input('\nAperte ENTER para começar ou digite SAIR para abandonar a partida: ').upper()
+    if answer == 'SAIR':
+        return True
+    else:
+        clear()
 
+
+def new_game() -> None:
+    clear()
+    answer: str = input('\nDigite JOGAR para jogar novamente ou SAIR para abandonar a partida: ').upper()
+    if answer == 'SAIR':
+        clear()
+        exit()
+    elif answer == 'JOGAR':
+        game()
+    else:
+        new_game()
+
+
+def game():
+    clear()
     b: list = add_numbers_list(1, 15)
     i: list = add_numbers_list(16, 30)
     n: list = add_numbers_list(31, 45)
@@ -205,27 +225,25 @@ if __name__ == '__main__':
     bingo_card: list[list[int]] = create_bingo_card(bingo)
     exit_game: bool = False
 
-    name: str = input('\nDigite seu nome: ')
-    clear()
-
-    print(f'Olá {name}, está é a sua cartela.\n')
-    show_matrix(bingo_card)
-
-    answer: str = input('Aperte enter para começar ou digite sair para abandonar a partida: ').lower()
-    if answer == 'sair':
-        exit()
-    else:
-        clear()
-
+    exit_game = question()
 
     while not exit_game:
-        check_number(bingo_card, number := raffle(bingo_raffle))
-        show_matrix(bingo_card)
-        check_bingo(bingo_card, name)
+        name: str = input('\nDigite seu nome: ')
+        clear()
 
-        answer: str = input(
-            'Aperte enter para continuar ou digite sair para abandonar a partida: ').lower()
-        if answer == 'sair':
-            exit_game = True
-        else:
-            clear()
+        print(f'Olá {name}, está é a sua cartela.\n')
+        show_matrix(bingo_card)
+
+        exit_game = question()
+
+        while not exit_game:
+            check_number(bingo_card, number := raffle(bingo_raffle))
+            show_matrix(bingo_card)
+            check_bingo(bingo_card, name)
+            exit_game = question()
+
+
+    new_game()
+
+if __name__ == '__main__':
+    game()
