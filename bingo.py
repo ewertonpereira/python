@@ -1,6 +1,7 @@
 from random import shuffle
 import copy
 import os
+import time
 
 
 # clean terminal screen
@@ -125,6 +126,7 @@ def check_each_row(bingo_card: list[list], number: int, name: str):
                 if adder == 5:
                     print('BIIIIIINGO!!!\n')
                     print(f'Parabéns {name}, você ganhou!')
+                    time.sleep(3)
                     new_game()
 
 
@@ -138,6 +140,7 @@ def check_each_column(bingo_card: list[list], number: int, name: str):
                 if adder == 5:
                     print('BIIIIIINGO!!!\n')
                     print(f'Parabéns {name}, você ganhou!')
+                    time.sleep(3)
                     new_game()
 
 
@@ -151,6 +154,7 @@ def check_main_diagonal(bingo_card: list[list], name: str):
                 if adder == 5:
                     print('BIIIIIINGO!!!\n')
                     print(f'Parabéns {name}, você ganhou!')
+                    time.sleep(3)
                     new_game()
 
 
@@ -164,6 +168,7 @@ def check_secondary_diagonal(bingo_card: list[list], name: str):
         if adder == 5:
             print('BIIIIIINGO!!!\n')
             print(f'Parabéns {name}, você ganhou!')
+            time.sleep(3)
             new_game()
             
 
@@ -241,6 +246,7 @@ def game():
             show_matrix(bingo_card)
             check_bingo(bingo_card, name)
             exit_game = question()
+            #clear()
 
 
     new_game()
