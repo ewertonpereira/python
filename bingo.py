@@ -1,12 +1,12 @@
 from random import shuffle
-import copy
-import os
-import time
+from copy import deepcopy
+from os import system
+from time import sleep
 
 
 # clean terminal screen
 def clear(): 
-    return os.system('cls')
+    return system('cls')
 
 # create a matrix of matrices
 def create_array_matrices(size_matrix: int) -> list[list]:
@@ -126,7 +126,7 @@ def check_each_row(bingo_card: list[list], number: int, name: str):
                 if adder == 5:
                     print('BIIIIIINGO!!!\n')
                     print(f'Parabéns {name}, você ganhou!')
-                    time.sleep(3)
+                    sleep(3)
                     new_game()
 
 
@@ -140,7 +140,7 @@ def check_each_column(bingo_card: list[list], number: int, name: str):
                 if adder == 5:
                     print('BIIIIIINGO!!!\n')
                     print(f'Parabéns {name}, você ganhou!')
-                    time.sleep(3)
+                    sleep(3)
                     new_game()
 
 
@@ -154,7 +154,7 @@ def check_main_diagonal(bingo_card: list[list], name: str):
                 if adder == 5:
                     print('BIIIIIINGO!!!\n')
                     print(f'Parabéns {name}, você ganhou!')
-                    time.sleep(3)
+                    sleep(3)
                     new_game()
 
 
@@ -168,7 +168,7 @@ def check_secondary_diagonal(bingo_card: list[list], name: str):
         if adder == 5:
             print('BIIIIIINGO!!!\n')
             print(f'Parabéns {name}, você ganhou!')
-            time.sleep(3)
+            sleep(3)
             new_game()
             
 
@@ -226,7 +226,7 @@ def game():
     o: list = add_numbers_list(61, 75)
 
     bingo: list[list[int]] = [b, i, n, g, o]
-    bingo_raffle = copy.deepcopy(bingo)
+    bingo_raffle = deepcopy(bingo)
     bingo_card: list[list[int]] = create_bingo_card(bingo)
     exit_game: bool = False
 
