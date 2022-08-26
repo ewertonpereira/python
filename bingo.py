@@ -4,7 +4,8 @@ import os
 
 
 # clean terminal screen
-def clear(): return os.system('cls')
+def clear(): 
+    return os.system('cls')
 
 # create a matrix of matrices
 def create_array_matrices(size_matrix: int) -> list[list]:
