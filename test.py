@@ -11,3 +11,12 @@ with open('booyah.txt', 'w', encoding='utf-8') as file:
 with open('booyah.txt', 'r', encoding='utf-8') as file:
     content = file.read()
     print(content)
+
+
+with open('booyah.txt', 'a', encoding='utf-8') as file:
+    file.write('\nI add this!')
+
+
+with open('booyah.txt', 'r', encoding='utf-8') as file:
+    content = file.read()
+    print(content)
