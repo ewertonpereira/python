@@ -47,4 +47,4 @@ with open('log.txt', 'r', encoding='utf-8') as file:
     print(content)
 
 
-print(tempo_trabalhado)
+print(tempo_trabalhado) 
