@@ -15,6 +15,11 @@ int main (){
 
     j = size - 2;
 
+    // remove => !?,;.
+    for(i = 0; i < strlen(word); i++){
+        if(word[i] != '!')
+    }
+
     for(i = 0; i < (size - 2); i++){
         if(word[i] != copy_word[j]){
             printf("Nao eh um palindromo.");
