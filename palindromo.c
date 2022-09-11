@@ -25,7 +25,7 @@ int main (){
             printf("Nao eh um palindromo.");
             return 0;
         }
-        j--;    
+        j--;      
     }
 
     printf("Eh palindromo!\n\n");
