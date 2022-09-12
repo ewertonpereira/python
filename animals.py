@@ -30,6 +30,7 @@ def get_position(name: str) -> int:
 
     return position
 
+
 # show who wins the hunt
 def hunt(names: list[str], bob_position: int, rex_position: int, oli_position: int) -> str:
 
@@ -38,7 +39,7 @@ def hunt(names: list[str], bob_position: int, rex_position: int, oli_position: i
     # if the position of the dogs are the same
     if bob_position == rex_position:
         status = True
-        result = f'{names[2]} fugiu...'
+        result = f'\n{names[2]}, ele fugiu...'
     # if oli's position is less than both
     elif oli_position < bob_position and oli_position < rex_position and bob_position != rex_position:
         while status != True:
@@ -46,10 +47,10 @@ def hunt(names: list[str], bob_position: int, rex_position: int, oli_position: i
             rex_position -= 1
             if bob_position == oli_position:
                 status = True
-                result = names[0]
+                result = f'\n{names[0]}, ele pegou o gato!'
             elif rex_position == oli_position:
                 status = True
-                result = names[1]
+                result = f'\n{names[1]}, ele pegou o gato!'
     # if oli's position is greater than both
     elif oli_position > bob_position and oli_position > rex_position and bob_position != rex_position:
         while status != True:
@@ -57,10 +58,10 @@ def hunt(names: list[str], bob_position: int, rex_position: int, oli_position: i
             rex_position += 1
             if bob_position == oli_position:
                 status = True
-                result = names[0]
+                result = f'\n{names[0]}, ele pegou o gato!'
             elif rex_position == oli_position:
                 status = True
-                result = names[1]
+                result = f'\n{names[1]}, ele pegou o gato!'
     # if oli's position is greater than bob and less than rex
     elif oli_position > bob_position and oli_position < rex_position and bob_position != rex_position:
         while status != True:
@@ -68,10 +69,10 @@ def hunt(names: list[str], bob_position: int, rex_position: int, oli_position: i
             rex_position -= 1
             if bob_position == oli_position:
                 status = True
-                result = names[0]
+                result = f'\n{names[0]}, ele pegou o gato!'
             elif rex_position == oli_position:
                 status = True
-                result = names[1]
+                result = f'\n{names[1]}, ele pegou o gato!'
     # if oli's position is less than bob and bigger than rex
     elif oli_position < bob_position and oli_position > rex_position and bob_position != rex_position:
         while status != True:
@@ -79,34 +80,29 @@ def hunt(names: list[str], bob_position: int, rex_position: int, oli_position: i
             rex_position -= 1
             if bob_position == oli_position:
                 status = True
-                result = names[0]
+                result = f'\n{names[0]}, ele pegou o gato!'
             elif rex_position == oli_position:
                 status = True
-                result = names[1]
+                result = f'\n{names[1]}, ele pegou o gato!'
     
-
     return result
 
 
 def start():
     clear()
     names: list[str] = ['Bob', 'Rex', 'Oli']
-
-    print('=' * 29)
-    print(title := 'The hunt'.center(29))
-    print('=' * 29)
-
     bob_position = get_position(names[0])
     rex_position = get_position(names[1])
     oli_position = get_position(names[2])
 
-    print(bob_position)
-    print(rex_position)
-    print(oli_position)
+    print('=' * 29)
+    print(title := 'A CAÇADA'.center(29))
+    print('=' * 29)
+    clear()
+    print('=' * 29)
+    print(title := 'O VENCEDOR É...'.center(29))
+    print('=' * 29)
+    print(result := hunt(names, bob_position, rex_position, oli_position))
 
-    result = hunt(names, bob_position, rex_position, oli_position)
-    print(result)
-
-    
 if __name__ == '__main__':
     start()
