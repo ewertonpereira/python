@@ -7,43 +7,74 @@ from os import system
 
 
 # clean terminal screen
-def clear(): 
+def clear():
     return system('cls')
 
 
-def get_name(name:str):
+def get_position(name: str) -> int:
     try:
         position: int = int(input(f'\nDigite a posição inicial do {name}: '))
         if position < 0:
             clear()
             print('Digite apenas números positivos.\n')
-            position = get_name(name)
+            position = get_position(name)
         elif type(position) != int:
             clear()
             print('Digite apenas números inteiros.\n')
-            position = get_name(name)
+            position = get_position(name)
     except ValueError:
         clear()
         print('Digite apenas números.\n')
-        position = get_name(name)
-        
+        position = get_position(name)
+
     return position
+
+
+def hunt(names: list[str], bob_position: int, rex_position: int, oli_position: int) -> str:
+
+    status: bool = False
+
+    if bob_position == rex_position:
+        result = names[2]
+    elif oli_position < bob_position and oli_position < rex_position and bob_position != rex_position:
+        while status != True:
+            bob_position -= 1
+            rex_position -= 1
+            if bob_position == oli_position:
+                status = True
+                result = names[0]
+            elif rex_position == oli_position:
+                status = True
+                result = names[1]
+    elif oli_position > bob_position and oli_position > rex_position and bob_position != rex_position:
+        while status != True:
+            bob_position += 1
+            rex_position += 1
+            if bob_position == oli_position:
+                status = True
+                result = names[0]
+            elif rex_position == oli_position:
+                status = True
+                result = names[1]
+
+    return result
 
 
 if __name__ == '__main__':
     clear()
-    bob: str = 'Bob'
-    rex: str = 'Rex'
-    oli: str = 'Oli'
+    names: list[str] = ['Bob', 'Rex', 'Oli']
 
     print('=' * 29)
     print(title := 'The hunt'.center(29))
     print('=' * 29)
 
-    bob_position = get_name(bob)
-    rex_position = get_name(rex)
-    oli_position = get_name(oli)
+    bob_position = get_position(names[0])
+    rex_position = get_position(names[1])
+    oli_position = get_position(names[2])
 
     print(bob_position)
     print(rex_position)
     print(oli_position)
+
+    result = hunt(names, bob_position, rex_position, oli_position)
+    print(result)
