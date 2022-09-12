@@ -11,6 +11,7 @@ def clear():
     return system('cls')
 
 
+# shows the position of each animal
 def get_position(name: str) -> int:
     try:
         position: int = int(input(f'\nDigite a posição inicial do {name}: '))
@@ -29,13 +30,16 @@ def get_position(name: str) -> int:
 
     return position
 
-
+# show who wins the hunt
 def hunt(names: list[str], bob_position: int, rex_position: int, oli_position: int) -> str:
 
     status: bool = False
 
+    # if the position of the dogs are the same
     if bob_position == rex_position:
-        result = names[2]
+        status = True
+        result = f'{names[2]} fugiu...'
+    # if oli's position is less than both
     elif oli_position < bob_position and oli_position < rex_position and bob_position != rex_position:
         while status != True:
             bob_position -= 1
@@ -46,6 +50,7 @@ def hunt(names: list[str], bob_position: int, rex_position: int, oli_position: i
             elif rex_position == oli_position:
                 status = True
                 result = names[1]
+    # if oli's position is greater than both
     elif oli_position > bob_position and oli_position > rex_position and bob_position != rex_position:
         while status != True:
             bob_position += 1
@@ -56,11 +61,34 @@ def hunt(names: list[str], bob_position: int, rex_position: int, oli_position: i
             elif rex_position == oli_position:
                 status = True
                 result = names[1]
+    # if oli's position is greater than bob and less than rex
+    elif oli_position > bob_position and oli_position < rex_position and bob_position != rex_position:
+        while status != True:
+            bob_position += 1
+            rex_position -= 1
+            if bob_position == oli_position:
+                status = True
+                result = names[0]
+            elif rex_position == oli_position:
+                status = True
+                result = names[1]
+    # if oli's position is less than bob and bigger than rex
+    elif oli_position < bob_position and oli_position > rex_position and bob_position != rex_position:
+        while status != True:
+            bob_position += 1
+            rex_position -= 1
+            if bob_position == oli_position:
+                status = True
+                result = names[0]
+            elif rex_position == oli_position:
+                status = True
+                result = names[1]
+    
 
     return result
 
 
-if __name__ == '__main__':
+def start():
     clear()
     names: list[str] = ['Bob', 'Rex', 'Oli']
 
@@ -78,3 +106,7 @@ if __name__ == '__main__':
 
     result = hunt(names, bob_position, rex_position, oli_position)
     print(result)
+
+    
+if __name__ == '__main__':
+    start()
