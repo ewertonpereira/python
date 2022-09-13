@@ -31,59 +31,55 @@ def get_position(name: str) -> int:
     return position
 
 
+def define_phrase(names: list[str], bob_position: int, rex_position: int, oli_position: int) -> str:
+    if bob_position == oli_position:
+        return f'\n{names[0]}, ele pegou o gato!'
+    elif rex_position == oli_position:
+        return f'\n{names[1]}, ele pegou o gato!'
+
+
 # show who wins the hunt
 def hunt(names: list[str], bob_position: int, rex_position: int, oli_position: int) -> str:
 
     status: bool = False
+    compare: bool = lambda oli, bob, rex: oli == bob or oli == rex
 
     # if the position of the dogs are the same
     if bob_position == rex_position:
         status = True
         result = f'\n{names[2]}, ele fugiu...'
+
     # if oli's position is less than both
     elif oli_position < bob_position and oli_position < rex_position and bob_position != rex_position:
         while status != True:
             bob_position -= 1
             rex_position -= 1
-            if bob_position == oli_position:
-                status = True
-                result = f'\n{names[0]}, ele pegou o gato!'
-            elif rex_position == oli_position:
-                status = True
-                result = f'\n{names[1]}, ele pegou o gato!'
+            result = define_phrase(names, bob_position, rex_position, oli_position)
+            status =  compare(oli_position, bob_position, rex_position)
+
     # if oli's position is greater than both
     elif oli_position > bob_position and oli_position > rex_position and bob_position != rex_position:
         while status != True:
             bob_position += 1
             rex_position += 1
-            if bob_position == oli_position:
-                status = True
-                result = f'\n{names[0]}, ele pegou o gato!'
-            elif rex_position == oli_position:
-                status = True
-                result = f'\n{names[1]}, ele pegou o gato!'
+            result = define_phrase(names, bob_position, rex_position, oli_position)
+            status =  compare(oli_position, bob_position, rex_position)
+
     # if oli's position is greater than bob and less than rex
     elif oli_position > bob_position and oli_position < rex_position and bob_position != rex_position:
         while status != True:
             bob_position += 1
             rex_position -= 1
-            if bob_position == oli_position:
-                status = True
-                result = f'\n{names[0]}, ele pegou o gato!'
-            elif rex_position == oli_position:
-                status = True
-                result = f'\n{names[1]}, ele pegou o gato!'
+            result = define_phrase(names, bob_position, rex_position, oli_position)
+            status =  compare(oli_position, bob_position, rex_position)
+
     # if oli's position is less than bob and bigger than rex
     elif oli_position < bob_position and oli_position > rex_position and bob_position != rex_position:
         while status != True:
             bob_position += 1
             rex_position -= 1
-            if bob_position == oli_position:
-                status = True
-                result = f'\n{names[0]}, ele pegou o gato!'
-            elif rex_position == oli_position:
-                status = True
-                result = f'\n{names[1]}, ele pegou o gato!'
+            result = define_phrase(names, bob_position, rex_position, oli_position)
+            status =  compare(oli_position, bob_position, rex_position)
     
     return result
 
