@@ -32,7 +32,7 @@ def rotation_number():
     except ValueError:
         clear()
         print('Digite apenas números inteiros')
-        rotation_number()
+        rotation: int = rotation_number()
 
     return rotation
 
@@ -40,15 +40,16 @@ def rotation_number():
 rotation: int = rotation_number()
 text: str = input('Digite seu texto: ')
 print(text)
+
  
-
-alphabet: list[str] = ['a', 'b', 'c', 'd', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-
-for letter in text:
-    for letter_ in alphabet:
-        if text[letter] == alphabet[letter_]:
-            new_text: str = alphabet[letter_ + rotation]
+alphabet: list[str] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 
 
+for letter in range(len(text)):
+    for letter_ in range(len(alphabet)):
+        if letter == letter_:
+            text = text.replace(text[letter], alphabet[letter_ + rotation])
+            
 
-print(new_text)
+
+print(text)
