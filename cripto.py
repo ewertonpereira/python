@@ -2,23 +2,9 @@
 2. Criptografia de mensagem. Essa cifra, consiste em girar as letras a partir de um seguinte número de posições. Sendo assim, a pessoa que recebe a mensagem, sabe quantas posições voltar, e portanto, terá a mensagem original. Sua tarefa é, dado um texto qualquer, realizar a rotação.
 
 Obs: Não precisa considerar caracteres com acentos, como: á, à e etc…
-
-Alfabeto: abcdefghijklmnopqrstuvwxyz
-
-Exemplo:
-texto = Ola, meu nome eh Carlos! e o Seu?
-rotacoes = 7
-resultado = Vsh, tlb uvtl lo Jhysvz! L v zlb?;
-
-Sua implementação deve ter uma função que receba um número inteiro positivo(a rotação) e um texto,
-e deve retornar o texto cifrado.
-
-Exemplo:
-std::string teste(int rotacoes, std::string texto) {
-...
-return
 """
 from os import system
+import string
 
 
 # clean terminal screen
@@ -26,7 +12,8 @@ def clear():
     return system('cls')
 
 
-def rotation_number():
+# sets the number for encryption
+def rotation_number() -> int:
     try:
         rotation: int = int(input('Informe o número de rotações: '))
     except ValueError:
@@ -37,19 +24,29 @@ def rotation_number():
     return rotation
 
 
-rotation: int = rotation_number()
-text: str = input('Digite seu texto: ')
-print(text)
+def start() -> None:
+    clear()
+    rotation: int = rotation_number()
+    clear()
+    text: str = input('Digite seu texto: ').lower()
+    print(text)
+    
+    alphabet: list[str] = list(string.ascii_lowercase)
+    size: int = len(alphabet)
 
- 
-alphabet: list[str] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+    new_text: str = ''
+    for letter in text:
+        if letter == ' ' or letter == '!' or letter == '?' or letter == ',' or letter == '.':
+            new_text += letter
+        elif letter in alphabet:
+            index = alphabet.index(letter)
+            new_letter = alphabet[(index + rotation) % size]
+            new_text += new_letter
+
+    clear()
+    print(f'{text}\n')
+    print(f'\n{new_text}')
 
 
-for letter in range(len(text)):
-    for letter_ in range(len(alphabet)):
-        if letter == letter_:
-            text = text.replace(text[letter], alphabet[letter_ + rotation])
-            
-
-
-print(text)
+if __name__ == '__main__':
+    start()
