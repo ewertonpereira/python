@@ -3,9 +3,9 @@
     - passar dois números como parâmetro
     - testar resultado da função
 """
-def test_testar_parametros_da_funcao_somar_dois_numeros():
-    somar_dois_numeros(1, 2)
+def test_soma_da_funcao_somar_dois_numemros():
+    assert somar_dois_numeros(1, 2) == 3
 
 
 def somar_dois_numeros(num1, num2):
-    pass
+    return num1 + num2
