@@ -10,6 +10,7 @@ Características:
     - Mostrar o percentual de acertos do usuário
     - Possibilita o usuário tentar o questionário novamente
 """
+from typing import Dict, List
 from random import shuffle
 
 def quiz() -> None:
@@ -34,12 +35,12 @@ def quiz() -> None:
             print('=' * 90)
             print(title := 'QUESTIONÁRIO'.center(90))
             print('=' * 90)
-            question_number: int = [1, 2, 3, 4, 5 , 6, 7, 8, 9, 10]
+            question_number: List[int] = [1, 2, 3, 4, 5 , 6, 7, 8, 9, 10]
             shuffle(question_number)
-            list_choices:list[str] = ['a', 'b', 'c', 'd']
+            list_choices: List[str] = ['a', 'b', 'c', 'd']
             shuffle(list_choices)
 
-            questions = {
+            questions: Dict = {
                 question_number[0]: {
                     'question': 'Quanto é 2 + 2?',
                     'alternatives': {
@@ -174,12 +175,12 @@ def quiz() -> None:
             print(title := 'Created by Ewerton Pereira'.center(90))
             print('=' * 90)
 
-            answer = False
+            answer: bool = False
 
             while not answer:
                 user_answer: str = input('\nDigite [1] se deseja reiniciar o questionário ou [0] para sair: ')
                 if user_answer == '0' or user_answer == '1':
-                    answer = True
+                    answer: bool = True
 
 
             match user_answer:
@@ -187,7 +188,6 @@ def quiz() -> None:
                     quiz()
                 case '2':
                     exit()
-
 
         case '2':
             exit()
