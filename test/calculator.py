@@ -1,7 +1,9 @@
+from numbers import Number
+
+
 class Calculator():
     def sum(self, number1, number2):
-        if isinstance(number1, int) and isinstance(number2, int):
+        if isinstance(number1, Number) and isinstance(number2, Number):
             return number1 + number2
         else:
             raise Exception('Insira somente números.')
-            
