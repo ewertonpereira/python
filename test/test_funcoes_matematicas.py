@@ -23,7 +23,7 @@
 # def test_instanciar_funcoes_matematicas():
 #     FuncoesMatematicas()
 
-from funcoes_matematicas import FuncoesMatematicas
+from test.funcoes_matematicas import FuncoesMatematicas
 
 
 def test_executar_metedo_somar_dois_numeros():
