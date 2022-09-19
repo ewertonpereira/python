@@ -9,5 +9,6 @@ class Calculator():
         else:
             raise Exception('Insira somente números.')
             
-def subtraction():
-    pass
+    def subtraction(self, number1, number2):
+        return number1 - number2
+        
