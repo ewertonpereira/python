@@ -111,7 +111,23 @@ class TesteCalculatorMultiplication(unittest.TestCase):
     def test_multiplication_number_string(self):
         with self.assertRaises(Exception):
             self.calc.multiplication(2, 'b')
-            
+
+
+class TestCalculatorDivision(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self.calc = Calculator()
+
+
+    def test_division_by_zero(self):
+        with self.assertRaises(Exception):
+            self.calc.division(2, 0)
+
+
+    def test_division_two_positive_numbers(self):
+        result = self.calc.division(4, 2)
+        self.assertEqual(result, 2)
+
 
 if __name__ == '__main__':
     unittest.main()
