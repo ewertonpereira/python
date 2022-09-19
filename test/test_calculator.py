@@ -78,5 +78,40 @@ class TestClaculatorSubtraction(unittest.TestCase):
             self.calc.subtraction(8, 'b')
 
 
+class TesteCalculatorMultiplication(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self.calc = Calculator()
+
+
+    def test_multiplication_two_positive_numbers(self):
+        result = self.calc.multiplication(2, 2)
+        self.assertEqual(result, 4)
+
+    
+    def test_multiplication_two_negative_numbers(self):
+        result = self.calc.multiplication(-7, -2)
+        self.assertEqual(result, 14)
+
+
+    def test_multiplication_two_float_numbers(self):
+        result = self.calc.multiplication(7.1, 2.6)
+        self.assertEqual(result, 18.46)
+
+
+    def test_multiplication_strings(self):
+        with self.assertRaises(Exception):
+            self.calc.multiplication('a', 'b')
+
+    def test_mulplication_string_number(self):
+        with self.assertRaises(Exception):
+            self.calc.multiplication('a', 2)
+
+
+    def test_multiplication_number_string(self):
+        with self.assertRaises(Exception):
+            self.calc.multiplication(2, 'b')
+            
+
 if __name__ == '__main__':
     unittest.main()
