@@ -8,7 +8,10 @@ class Calculator():
             return number1 + number2
         else:
             raise Exception('Insira somente números.')
+
             
     def subtraction(self, number1, number2):
-        return number1 - number2
-        
+        if isinstance(number1, Number) and isinstance(number2, Number):
+            return number1 - number2
+        else:
+            raise Exception('Insira apenas números.')
