@@ -6,6 +6,7 @@ def ceasar(text: str, key: int) -> str:
         result += enc_char
     return result
 
+
 #print(result := (ceasar('golden ball', 2)))
 
 
