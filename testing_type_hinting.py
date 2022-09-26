@@ -32,6 +32,7 @@ def print_thing(thing: Union[str, int]) -> None:
 print_thing(1)
 print_thing('d')
 
+
 # -------------------------------
 
 # def print_salary_entry(entry: Tuple[str, Optional[int]]) -> None:
