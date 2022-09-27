@@ -10,18 +10,19 @@ def check_answer(answer: str, question: int):
         else:
             return answer
     else:
+        print('Digite apenas letras.')
         answer: str = get_answer(question)
 
 
 def get_answer(question: int):
-    answer: str = input(f'Digite a resposta da questão {question}: ').upper()
-    check_answer(answer)
+    answer: str = check_answer(input(f'Digite a resposta da questão {question}: ').upper(), question)
+    return answer
     
 
+question = 1
+while question <= 10: 
+    get_answer(question)
+    question += 1
 
-def answers():
 
 
-word = 'boi'
-word = isinstance(word, str)
-print(word)
