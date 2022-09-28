@@ -24,5 +24,3 @@ while question <= 10:
     get_answer(question)
     question += 1
 
-
-
