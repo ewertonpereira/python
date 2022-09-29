@@ -3,36 +3,46 @@ Leia uma matriz 5x10 que se refere  respostas de 10 questões de multipla escolh
 respostas que podem ser a, b, c ou d. Seu programa deverá comparar as respsotas de cada candidato com o gabarito e emitir um vetor denominado resultado, contendo a 
 pontução correspondente a cada aluno.
 """
-import numpy as np
 from typing import List
 
 
-def check_answer(answer: str, question: int):
+def check_answer(question_number: int):
+
+    answer: str = input(f'Digite a resposta da questão {question_number}: ').upper()
+
     if isinstance(answer, str):
-        if answer !='A' or answer !='B' or answer !='C' or answer !='D':
-            answer: str = get_answer(question)
+        if answer !='A' and answer !='B' and answer !='C' and answer !='D':
+            print('As opções possíveis são: A, B, C ou D.')
+            answer: str = check_answer(question_number)
         else:
             return answer
     else:
         print('Digite apenas letras.')
-        answer: str = get_answer(question)
+        answer: str = check_answer(question_number)
 
 
-def get_answer(question: int):
-    answer: str = check_answer(input(f'Digite a resposta da questão {question}: ').upper(), question)
-    return answer
-    
+# feedback: List[str] = ['C', 'B', 'A', 'A','C', 'B', 'D', 'D', 'A', 'C']
+feedback: List[str] = ['C', 'B', 'A']
 
-# question = 1
-# while question <= 10: 
-#     get_answer(question)
-#     question += 1
+students_amount: int = 2
+questions_amount: int = 3
+school_tests: List[str] = []
 
-feedback: List[str] = ['C', 'B', 'A', 'A','C', 'B', 'D', 'D', 'A', 'C']
+question_number: int = 1
 
-print(result := np.matrix(( 5, 10), dtype=str),'\n')
+for student in range(students_amount):
+    answers: List[str] = []
+    for questions in range(questions_amount):
+        answers.append(check_answer(question_number))
+        question_number += 1
+    school_tests.append(answers)
+    question_number = 1
 
-country = np.array(['USA', 'Japan', 'UK', '', 'India', 'China'])
-  
-# Print the array
-print(country)
+ 
+print(school_tests)
+
+for row in range(len(school_tests)):
+    for column in range(len(school_tests)):
+        if school_tests[row][column] == feedback[row]:
+            print(school_tests[row][column])
+            print(feedback[row])
