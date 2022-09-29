@@ -3,13 +3,14 @@ Faça um programa para gerar automáticamente números entre 0 e 99 de uma carte
 ter números repetidos dentro das cartelas. O programa deve exibir na tela a cartela gerada.
 """
 from random import randint, shuffle
+from typing import List
 
 # create a matrix with non-repeating numbers
-def matrix_not_repeated_numbers(row_size: int, column_size: int, min_rand: int, max_rand: int) -> list[list[int]]:
+def matrix_not_repeated_numbers(row_size: int, column_size: int, min_rand: int, max_rand: int) -> List[int]:
     
     matrix_size: int = (row_size * column_size)
-    list_numbers: list[int]= []
-    matrix: list[list] = []
+    list_numbers: List[int]= []
+    matrix: List[list] = []
     index: int = 0
     counter: int = 0
 
@@ -41,7 +42,7 @@ if __name__ == '__main__':
     column_size: int = 5 
     min_rand: int = 0
     max_rand: int = 99
-    matrix: list[list[int]] = matrix_not_repeated_numbers(row_size, column_size, min_rand, max_rand)
+    matrix: List[int] = matrix_not_repeated_numbers(row_size, column_size, min_rand, max_rand)
   
     print('=' * 29)
     print(title := 'BINGO'.center(29))
