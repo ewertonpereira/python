@@ -3,6 +3,10 @@ Leia uma matriz 5x10 que se refere  respostas de 10 questões de multipla escolh
 respostas que podem ser a, b, c ou d. Seu programa deverá comparar as respsotas de cada candidato com o gabarito e emitir um vetor denominado resultado, contendo a 
 pontução correspondente a cada aluno.
 """
+import numpy as np
+from typing import List
+
+
 def check_answer(answer: str, question: int):
     if isinstance(answer, str):
         if answer !='A' or answer !='B' or answer !='C' or answer !='D':
@@ -19,8 +23,16 @@ def get_answer(question: int):
     return answer
     
 
-question = 1
-while question <= 10: 
-    get_answer(question)
-    question += 1
+# question = 1
+# while question <= 10: 
+#     get_answer(question)
+#     question += 1
 
+feedback: List[str] = ['C', 'B', 'A', 'A','C', 'B', 'D', 'D', 'A', 'C']
+
+print(result := np.matrix(( 5, 10), dtype=str),'\n')
+
+country = np.array(['USA', 'Japan', 'UK', '', 'India', 'China'])
+  
+# Print the array
+print(country)
