@@ -1,6 +1,6 @@
 """
 Leia uma matriz 5x10 que se refere  respostas de 10 questões de multipla escolha, referentes a 5 alunos. Leia também um vetor de 10 posições contendo o gabarito de
-respostas que podem ser a, b, c ou d. Seu programa deverá comparar as respsotas de cada candidato com o gabarito e emitir um vetor denominado resultado, contendo a 
+respostas que podem ser a, b, c ou d. Seu programa deverá comparar as respostas de cada candidato com o gabarito e emitir um vetor denominado resultado, contendo a 
 pontução correspondente a cada aluno.
 """
 from typing import List
@@ -24,7 +24,7 @@ def check_answer(question_number: int):
 # feedback: List[str] = ['C', 'B', 'A', 'A','C', 'B', 'D', 'D', 'A', 'C']
 feedback: List[str] = ['C', 'B', 'A']
 
-students_amount: int = 2
+students_amount: int = 3
 questions_amount: int = 3
 school_tests: List[str] = []
 
@@ -40,9 +40,19 @@ for student in range(students_amount):
 
  
 print(school_tests)
+result: List[int] = []
+adder: int =  0
+step: int = 0
 
 for row in range(len(school_tests)):
     for column in range(len(school_tests)):
-        if school_tests[row][column] == feedback[row]:
-            print(school_tests[row][column])
-            print(feedback[row])
+        if school_tests[row][column] == feedback[step]:
+            adder += 1
+        step += 1
+
+    result.append(adder)
+    adder = 0
+    step = 0
+
+
+print(result)
