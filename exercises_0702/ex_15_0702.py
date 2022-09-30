@@ -3,7 +3,6 @@ Leia uma matriz 5x10 que se refere  respostas de 10 questões de multipla escolh
 respostas que podem ser a, b, c ou d. Seu programa deverá comparar as respostas de cada candidato com o gabarito e emitir um vetor denominado resultado, contendo a 
 pontução correspondente a cada aluno.
 """
-from re import A
 from typing import List
 from os import system
 
@@ -12,8 +11,8 @@ from os import system
 def clear(): 
     return system('cls')
 
-
-def is_alpha_space(str):
+# checks if there are only letters and spaces
+def is_alpha_space(str) -> bool:
     return all(char.isalpha() or char.isspace() for char in str )
 
 
@@ -46,13 +45,13 @@ def check_answer(question_number: int):
             return answer
 
 
-# feedback: List[str] = ['C', 'B', 'A', 'A','C', 'B', 'D', 'D', 'A', 'C']
+
 feedback: List[str] = []
 names: List[str] = []
 school_tests: List[str] = []
 
-students_amount: int = 3
-questions_amount: int = 3
+students_amount: int = 5
+questions_amount: int = 10
 question_number: int = 1
 
 clear()
@@ -78,7 +77,6 @@ for student in range(students_amount):
     clear()
 
  
-print(school_tests)
 result: List[int] = []
 adder: int =  0
 step: int = 0
@@ -95,6 +93,6 @@ for row in range(len(school_tests)):
 
 
 clear()
-print(title := 'NOTAS'.center(29))
+print(title := 'NOTAS\n'.center(29))
 for index, value in enumerate(result):
     print(f'Nome: {names[index]}  \nNota: {value}\n')
