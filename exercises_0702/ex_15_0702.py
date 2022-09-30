@@ -4,6 +4,12 @@ respostas que podem ser a, b, c ou d. Seu programa deverá comparar as respostas
 pontução correspondente a cada aluno.
 """
 from typing import List
+from os import system
+
+
+# clean terminal screen
+def clear(): 
+    return system('cls')
 
 
 def check_answer(question_number: int):
@@ -12,17 +18,15 @@ def check_answer(question_number: int):
 
     if isinstance(answer, str):
         if answer !='A' and answer !='B' and answer !='C' and answer !='D':
-            print('As opções possíveis são: A, B, C ou D.')
+            clear()
+            print('As opções possíveis são: A, B, C ou D.\n')
             answer: str = check_answer(question_number)
         else:
             return answer
-    else:
-        print('Digite apenas letras.')
-        answer: str = check_answer(question_number)
 
 
 # feedback: List[str] = ['C', 'B', 'A', 'A','C', 'B', 'D', 'D', 'A', 'C']
-feedback: List[str] = ['C', 'B', 'A']
+feedback: List[str] = []
 
 students_amount: int = 3
 questions_amount: int = 3
@@ -30,6 +34,16 @@ school_tests: List[str] = []
 
 question_number: int = 1
 
+clear()
+print('Digite as respostas para o gabarito: \n')
+for questions in range(questions_amount):
+    feedback.append(check_answer(question_number))
+    question_number += 1
+
+
+question_number = 1
+clear()
+print('Digite as respostas to teste: \n')
 for student in range(students_amount):
     answers: List[str] = []
     for questions in range(questions_amount):
@@ -37,6 +51,7 @@ for student in range(students_amount):
         question_number += 1
     school_tests.append(answers)
     question_number = 1
+    clear()
 
  
 print(school_tests)
