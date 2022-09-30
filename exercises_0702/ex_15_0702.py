@@ -3,6 +3,7 @@ Leia uma matriz 5x10 que se refere  respostas de 10 questões de multipla escolh
 respostas que podem ser a, b, c ou d. Seu programa deverá comparar as respostas de cada candidato com o gabarito e emitir um vetor denominado resultado, contendo a 
 pontução correspondente a cada aluno.
 """
+from re import A
 from typing import List
 from os import system
 
@@ -10,6 +11,26 @@ from os import system
 # clean terminal screen
 def clear(): 
     return system('cls')
+
+
+def is_alpha_space(str):
+    return all(char.isalpha() or char.isspace() for char in str )
+
+
+def check_name() -> str:
+
+    name: str = input('Digite o nome do aluno: \n').title()
+
+    if not is_alpha_space(name):
+        clear()
+        print('Digite apenas letras!\n')
+        name: str = check_name()
+    elif len(name) < 3:
+        clear()
+        print('O nome deve possuir mais de 3 caracteres.\n')
+        name: str = check_name()
+    
+    return name
 
 
 def check_answer(question_number: int):
@@ -27,11 +48,11 @@ def check_answer(question_number: int):
 
 # feedback: List[str] = ['C', 'B', 'A', 'A','C', 'B', 'D', 'D', 'A', 'C']
 feedback: List[str] = []
+names: List[str] = []
+school_tests: List[str] = []
 
 students_amount: int = 3
 questions_amount: int = 3
-school_tests: List[str] = []
-
 question_number: int = 1
 
 clear()
@@ -43,9 +64,12 @@ for questions in range(questions_amount):
 
 question_number = 1
 clear()
-print('Digite as respostas to teste: \n')
 for student in range(students_amount):
+    name: str = check_name()
+    names.append(name)
     answers: List[str] = []
+    clear()
+    print('Digite as respostas do aluno: ')
     for questions in range(questions_amount):
         answers.append(check_answer(question_number))
         question_number += 1
@@ -70,4 +94,7 @@ for row in range(len(school_tests)):
     step = 0
 
 
-print(result)
+clear()
+print(title := 'NOTAS'.center(29))
+for index, value in enumerate(result):
+    print(f'Nome: {names[index]}  \nNota: {value}\n')
