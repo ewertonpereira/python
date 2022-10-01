@@ -32,6 +32,7 @@ def check_name() -> str:
     return name
 
 
+
 def check_answer(question_number: int):
 
     answer: str = input(f'Digite a resposta da questão {question_number}: ').upper()
