@@ -11,6 +11,7 @@ from os import system
 def clear(): 
     return system('cls')
 
+
 # checks if there are only letters and spaces
 def is_alpha_space(str) -> bool:
     return all(char.isalpha() or char.isspace() for char in str )
@@ -32,7 +33,6 @@ def check_name() -> str:
     return name
 
 
-
 def check_answer(question_number: int):
 
     answer: str = input(f'Digite a resposta da questão {question_number}: ').upper()
@@ -46,13 +46,11 @@ def check_answer(question_number: int):
             return answer
 
 
-
 feedback: List[str] = []
 names: List[str] = []
 school_tests: List[str] = []
-
-students_amount: int = 5
-questions_amount: int = 10
+students_amount: int = 5 # changeable
+questions_amount: int = 10 # changeable
 question_number: int = 1
 
 clear()
