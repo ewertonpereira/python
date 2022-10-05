@@ -40,6 +40,20 @@ def get_questions_amount() -> int:
     return questions_amount
 
 
+def get_student_enrollment() -> int:
+
+    try:
+        student_enrollment: int = int(input('Digite o número de matrícula do aluno: '))
+        if isinstance(student_enrollment, int):
+            return student_enrollment
+        
+    except ValueError:
+        clear()
+        print('Digite apenas números inteiros!\n')
+        student_enrollment: int = get_student_enrollment()
+
+    return student_enrollment
+
 
 if __name__ == '__main__':
     clear()
