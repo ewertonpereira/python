@@ -5,9 +5,21 @@ export const ListStyled = styled('ul')`
     max-width: 900px;
     margin: 0 auto;
     padding: ${({theme}) => theme.spacing(10, 2, 10, 2)}; // base 8 -> 10x8=80, 2x8=16
-    display: grid;
-    grid-template-columns: 1fr 1fr;
 
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: ${({theme}) => theme.spacing(9)};
+
+    ${({theme}) => theme.breakpoints.down('md')}{
+        grid-template-columns: 1fr;
+        gap: ${({theme}) => theme.spacing(8)};
+    }
+
+`;
+
+export const EmptyList = styled('h2')`
+    text-align: center;
+    padding: ${({theme}) => theme.spacing(20, 0)};
 `;
 
 export const ItemList = styled('li')`
