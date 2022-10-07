@@ -2,6 +2,11 @@ import { styled } from "@mui/material";
 
 
 export const HeaderContainer = styled('header')`
-    color: red;
-    background-color: black;
+    width: 230px;
+    margin: 40px auto;
+    text-align: center;
+`;
+
+export const Logo = styled('img')`
+    width: 100%;
 `;
