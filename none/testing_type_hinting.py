@@ -10,8 +10,7 @@ def ceasar(text: str, key: int) -> str:
 #print(result := (ceasar('golden ball', 2)))
   
 
-from ast import Tuple
-from typing import Any, Optional
+from typing import Any
 
 def print_twice(something: Any) -> None:
     print(something, something, "!")
