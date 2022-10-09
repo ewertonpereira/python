@@ -13,6 +13,7 @@ Características:
 from typing import Dict, List
 from random import shuffle
 
+
 def quiz() -> None:
 
     answer: bool = False
