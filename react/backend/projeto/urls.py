@@ -17,8 +17,11 @@ from django.contrib import admin
 from django.urls import path
 
 from app.views import HomeApiView
+from person.views import PersonAPIView, FormMatchAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', HomeApiView.as_view()),
+    path('people/', PersonAPIView.as_view()),
+    path('people/<int:id>/matches', FormMatchAPIView.as_view()),
 ]
