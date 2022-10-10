@@ -115,6 +115,14 @@ def raffle(card: list[list]) -> int:
                     return element
 
 
+# shows the winner and ask for a new game
+def bingo_winner(name: str) -> None:
+    print('BIIIIIINGO!!!\n')
+    print(f'Parabéns {name}, você ganhou!')
+    sleep(3)
+    new_game()
+
+
 def check_each_row(bingo_card: list[list], number: int, name: str):
     adder: int = 0
     for row in range(len(bingo_card)):
@@ -123,10 +131,7 @@ def check_each_row(bingo_card: list[list], number: int, name: str):
                 if bingo_card[row][column] == 'x':
                     adder += 1
                 if adder == 5:
-                    print('BIIIIIINGO!!!\n')
-                    print(f'Parabéns {name}, você ganhou!')
-                    sleep(3)
-                    new_game()
+                    bingo_winner(name)
 
 
 def check_each_column(bingo_card: list[list], number: int, name: str):
@@ -137,10 +142,7 @@ def check_each_column(bingo_card: list[list], number: int, name: str):
                 if bingo_card[row][column] == 'x':
                     adder += 1
                 if adder == 5:
-                    print('BIIIIIINGO!!!\n')
-                    print(f'Parabéns {name}, você ganhou!')
-                    sleep(3)
-                    new_game()
+                    bingo_winner(name)
 
 
 def check_main_diagonal(bingo_card: list[list], name: str):
@@ -151,10 +153,7 @@ def check_main_diagonal(bingo_card: list[list], name: str):
                 if bingo_card[row][column] == 'x':
                     adder += 1
                 if adder == 5:
-                    print('BIIIIIINGO!!!\n')
-                    print(f'Parabéns {name}, você ganhou!')
-                    sleep(3)
-                    new_game()
+                    bingo_winner(name)
 
 
 def check_secondary_diagonal(bingo_card: list[list], name: str):
@@ -165,11 +164,8 @@ def check_secondary_diagonal(bingo_card: list[list], name: str):
             adder += 1
             counter -= 1
         if adder == 5:
-            print('BIIIIIINGO!!!\n')
-            print(f'Parabéns {name}, você ganhou!')
-            sleep(3)
-            new_game()
-            
+            bingo_winner(name)
+           
 
 def check_rows(bingo_card: list[list], name: str) -> None:
     adder: int = 0
@@ -224,7 +220,6 @@ def game():
     bingo_raffle = deepcopy(bingo)
     bingo_card: list[list[int]] = create_bingo_card(bingo)
     exit_game: bool = False
-
     exit_game = question()
 
     while not exit_game:
