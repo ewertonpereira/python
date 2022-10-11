@@ -15,6 +15,7 @@ class Customers:
         else:
             print('Plano inválido.')
 
+
     def watch_movie(self, movie, movie_plan) -> None:
         if self.plan == movie_plan:
             print(f'Ver filme {movie}')
