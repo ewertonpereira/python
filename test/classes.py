@@ -9,6 +9,7 @@ class Customers:
         else:
             raise Exception('Plano inválido.')
 
+
     def change_plan(self, new_plan) -> None:
         if new_plan in self.list_plan:
             self.plan = new_plan
