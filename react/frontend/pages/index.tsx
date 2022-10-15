@@ -5,7 +5,7 @@ import { useIndex } from '../src/hooks/pages/useIndex';
 
 
 const Home: NextPage = () => {
-  const  {listPeople} = useIndex();
+  const  { listPeople } = useIndex();
 
   return (
     <Box sx={{backgroundColor: 'secondary.main'}}>
