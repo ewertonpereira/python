@@ -4,6 +4,8 @@ import { ApiService } from "../../services/ApiService";
 
 export function useIndex(){
     const [listPeople, setListPeople] = useState<Person[]>([]);
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
 
     
     useEffect(() => {
@@ -13,6 +15,10 @@ export function useIndex(){
     }), [];
 
     return {
-        listPeople
+        listPeople,
+        name,
+        setName,
+        email,
+        setEmail
     }
 }
