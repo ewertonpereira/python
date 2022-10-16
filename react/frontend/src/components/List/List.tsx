@@ -1,5 +1,6 @@
 import { Button } from "@mui/material";
 import Person from "../../@types/person";
+import { FormatadorService } from "../../services/FormatadorService";
 import { Description, EmptyList, Information, ItemList, ListStyled, Name, Picture, Value } from "./List.style";
 
 interface ListProps{
@@ -16,8 +17,8 @@ const List = (props: ListProps) => {
                     <Picture src={person.picture}></Picture>
                     <Information>
                         <Name>{person.name}</Name>
-                        <Value>{person.hour_value.toLocaleString('pt-BR', {minimumFractionDigits: 2, style: 'currency', currency: 'BRL'})} por hora</Value>
-                        <Description>{person.description}</Description>
+                        <Value>{FormatadorService.valorMonetario(person.hour_value)} por hora</Value>
+                        <Description>{FormatadorService.limitarTexto(person.description, 200)}</Description>
                         <Button sx={{width: '70%'}}>Marcar encontro com {person.name}</Button>
                     </Information>
                 </ItemList>
