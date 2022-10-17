@@ -5,6 +5,7 @@ import { Description, EmptyList, Information, ItemList, ListStyled, Name, Pictur
 
 interface ListProps{
     people: Person[],
+    onSelect: (person: Person) => void
 }
 
 const List = (props: ListProps) => {
@@ -19,7 +20,7 @@ const List = (props: ListProps) => {
                         <Name>{person.name}</Name>
                         <Value>{FormatadorService.valorMonetario(person.hour_value)} por hora</Value>
                         <Description>{FormatadorService.limitarTexto(person.description, 200)}</Description>
-                        <Button sx={{width: '70%'}}>Marcar encontro com {person.name}</Button>
+                        <Button onClick={() => props.onSelect(person)} sx={{width: '70%'}}>Marcar encontro com {person.name}</Button>
                     </Information>
                 </ItemList>
                 ))}
