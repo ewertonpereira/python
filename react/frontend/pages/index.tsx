@@ -5,12 +5,22 @@ import { useIndex } from '../src/hooks/pages/useIndex';
 
 
 const Home: NextPage = () => {
-  const  { listPeople, name, setName, email, setEmail } = useIndex();
+  const  { 
+    listPeople, 
+    name, 
+    setName, 
+    email, 
+    setEmail, 
+    personChoice, 
+    setPersonChoice 
+  } = useIndex();
 
   return (
     <div>
       <Box sx={{backgroundColor: 'secondary.main'}}>
-        <List people={listPeople}></List>
+        <List people={listPeople}
+          onSelect={(person) => setPersonChoice(person)}
+        ></List>
       </Box>
 
       <Dialog open={true} fullWidth PaperProps={{sx: {p: 5}}}>
