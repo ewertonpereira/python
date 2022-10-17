@@ -23,7 +23,7 @@ const Home: NextPage = () => {
         ></List>
       </Box>
 
-      <Dialog open={true} fullWidth PaperProps={{sx: {p: 5}}}>
+      <Dialog onClose={() => setPersonChoice(null)} open={personChoice != null} fullWidth PaperProps={{sx: {p: 5}}}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
@@ -46,7 +46,7 @@ const Home: NextPage = () => {
         </Grid>
 
         <DialogActions sx={{mt: 5}}>
-          <Button>Cancelar</Button>
+          <Button onClick={() => setPersonChoice(null)}>Cancelar</Button>
           <Button>Marcar</Button>
         </DialogActions>
       </Dialog>
