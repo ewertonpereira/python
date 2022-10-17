@@ -6,6 +6,7 @@ export function useIndex(){
     const [listPeople, setListPeople] = useState<Person[]>([]);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
+    const [personChoice, setPersonChoice] = useState<Person | null>(null);
 
     
     useEffect(() => {
@@ -19,6 +20,8 @@ export function useIndex(){
         name,
         setName,
         email,
-        setEmail
+        setEmail,
+        personChoice,
+        setPersonChoice
     }
 }
