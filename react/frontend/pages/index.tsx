@@ -14,7 +14,7 @@ const Home: NextPage = () => {
     personChoice, 
     setPersonChoice,
     markClass,
-    message,
+    messagem,
     setMassage
   } = useIndex();
 
@@ -26,7 +26,7 @@ const Home: NextPage = () => {
         ></List>
       </Box>
 
-      <Dialog onClose={() => setPersonChoice(null)} open={personChoice != null} fullWidth PaperProps={{sx: {p: 5}}}>
+      <Dialog onClose={() => setPersonChoice(null)} open={personChoice !== null} fullWidth PaperProps={{sx: {p: 5}}}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
@@ -55,8 +55,8 @@ const Home: NextPage = () => {
       </Dialog>
 
       <Snackbar 
-        message={message} 
-        open={message.length > 0}
+        message={messagem} 
+        open={messagem.length > 0}
         autoHideDuration={2500}
         onClose={() => setMassage('')}
       />
