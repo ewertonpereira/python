@@ -7,6 +7,7 @@ export function useIndex(){
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [personChoice, setPersonChoice] = useState<Person | null>(null);
+    const [message, setMassage] = useState('');
 
     
     useEffect(() => {
@@ -15,24 +16,35 @@ export function useIndex(){
         })
     }), [];
 
+    useEffect(() => {
+        cleanForm();
+    }, [personChoice]) ;
+
     function markClass(){
-        if(personChoice != null){
+        if(personChoice !== null){
             if(validateDataClass()){
                 ApiService.post('/people/' + personChoice.id + '/classes', {
                     name,
                     email
                 }).then(() => {
                     setPersonChoice(null);
-                    alert('Cadastrado com sucesso!')
+                    setMassage('Cadastrado com sucesso!');
                 }).catch((error) => {
-                    alert(error.response?.data.message);
-                })
+                    setMassage(error.response?.data.message);
+                });
+            } else {
+                setMassage('Preencha os dados corretamente.');
             }
         }
     }
 
     function validateDataClass(){
         return name.length > 0 && email.length > 0;
+    }
+
+    function cleanForm(){
+        setName('');
+        setEmail('');
     }
 
     return {
@@ -43,6 +55,8 @@ export function useIndex(){
         setEmail,
         personChoice,
         setPersonChoice,
-        markClass
+        markClass,
+        message,
+        setMassage
     }
 }
