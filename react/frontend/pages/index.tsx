@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, DialogActions, Grid, TextField } from '@mui/material'
+import { Box, Button, Dialog, DialogActions, Grid, Snackbar, TextField } from '@mui/material'
 import type { NextPage } from 'next'
 import List from '../src/components/List/List'
 import { useIndex } from '../src/hooks/pages/useIndex';
@@ -13,7 +13,9 @@ const Home: NextPage = () => {
     setEmail, 
     personChoice, 
     setPersonChoice,
-    markClass
+    markClass,
+    message,
+    setMassage
   } = useIndex();
 
   return (
@@ -51,6 +53,13 @@ const Home: NextPage = () => {
           <Button onClick={() => markClass()}>Marcar</Button>
         </DialogActions>
       </Dialog>
+
+      <Snackbar 
+        message={message} 
+        open={message.length > 0}
+        autoHideDuration={2500}
+        onClose={() => setMassage('')}
+      />
     </div>
   )
 }
