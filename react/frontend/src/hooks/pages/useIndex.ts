@@ -7,7 +7,7 @@ export function useIndex(){
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [personChoice, setPersonChoice] = useState<Person | null>(null);
-    const [message, setMassage] = useState('');
+    const [messagem, setMassage] = useState('');
 
     
     useEffect(() => {
@@ -23,7 +23,7 @@ export function useIndex(){
     function markClass(){
         if(personChoice !== null){
             if(validateDataClass()){
-                ApiService.post('/people/' + personChoice.id + '/classes', {
+                ApiService.post('/people/' + personChoice.id + '/matches', {
                     name,
                     email
                 }).then(() => {
@@ -56,7 +56,7 @@ export function useIndex(){
         personChoice,
         setPersonChoice,
         markClass,
-        message,
+        messagem,
         setMassage
     }
 }
