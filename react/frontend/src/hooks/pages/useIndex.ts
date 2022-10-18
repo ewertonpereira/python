@@ -15,6 +15,26 @@ export function useIndex(){
         })
     }), [];
 
+    function markClass(){
+        if(personChoice != null){
+            if(validateDataClass()){
+                ApiService.post('/people/' + personChoice.id + '/classes', {
+                    name,
+                    email
+                }).then(() => {
+                    setPersonChoice(null);
+                    alert('Cadastrado com sucesso!')
+                }).catch((error) => {
+                    alert(error.response?.data.message);
+                })
+            }
+        }
+    }
+
+    function validateDataClass(){
+        return name.length > 0 && email.length > 0;
+    }
+
     return {
         listPeople,
         name,
@@ -22,6 +42,7 @@ export function useIndex(){
         email,
         setEmail,
         personChoice,
-        setPersonChoice
+        setPersonChoice,
+        markClass
     }
 }
