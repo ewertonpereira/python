@@ -31,3 +31,4 @@ class Customers:
 client = Customers('ewerton', 'ewerton@mail.com','basic')
 client.change_plan('premium')
 print(client.plan)
+ 
