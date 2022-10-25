@@ -43,6 +43,7 @@ def predicao(timeA, timeB):
   campeaoA = campeoes.get(timeA) if campeoes.get(timeA) != None else 0
   campeaoB = campeoes.get(timeB) if campeoes.get(timeB) != None else 0
 
+
   x = np.array([idA, idB, campeaoA, campeaoB]).astype('float64')
   x = np.reshape(x, (1,-1))
   _y = model.predict_proba(x)[0]
