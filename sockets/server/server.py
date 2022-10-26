@@ -1,12 +1,11 @@
 import socket
+import hashlib
 
 
 # with open(name_file, 'rb') as file:
 #     for data in file.readlines():
 #         connection.send(data)
 
-
-#     print('Arquivo enviado!')
 
 HOST = 'localhost'
 PORT = 50000
@@ -23,8 +22,16 @@ conn, ender = server.accept()
 print(f'Conectido em em {ender}')
 
 while True:
+    hasher = hashlib.md5()
     # tamanho de dados em bytes - bytes -> string
     data = conn.recv(1024)
+    hasher.update(data)
+    
+    crip = hasher.hexdigest()
+    print(crip)
+    
+
+    print(data.decode())
     if not data:
         print('Fechando conexão')
         conn.close()
