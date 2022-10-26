@@ -1,12 +1,6 @@
 import socket
+import hashlib
 
-
-# client = socket.socket(socket.AF_INET, socket.SOCK_STREAM ) # protocolo tcp
-
-# client.connect(('localhost', 7777))
-# print('Conectado')
-
-# namefile = str(input('Arquivo>'))
 
 # client.send(namefile.encode())
 
@@ -19,7 +13,7 @@ import socket
 
 # print(f'{namefile} recebido"\n')
 
-HOST = '127.0.0.1'
+HOST = 'localhost'
 PORT = 50000
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # DGRAM = UDP
@@ -27,7 +21,12 @@ client = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # DGRAM = UDP
 client.connect((HOST, 50000))
 print('Conectado')
 
-client.sendall(str.encode(input('Digite sua mensagem: ')))
+text = str.encode(input('Digite sua mensagem: '))
+client.sendall(text)
+hasher = hashlib.md5()
 
 data = client.recv(1024)
+hasher.update(text)
+crip = hasher.hexdigest()
+print(crip)
 print(f'Mensagem ecoada: {data.decode()}')
