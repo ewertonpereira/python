@@ -1,39 +1,25 @@
+from email.headerregistry import Address
 import socket
-import hashlib
-
-
-# with open(name_file, 'rb') as file:
-#     for data in file.readlines():
-#         connection.send(data)
 
 
 HOST = 'localhost'
 PORT = 50000
 
-# conexões - IPV4 ou dominio
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # protocolo tcp
-server.bind((HOST, 50000))
-server.listen(1)
-print('Aguardando conexão de um cliente')
+# protocolo TCP
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+server.bind((HOST, PORT))
+server.listen()
+print('Aguardando conexão de um cliente...')
 
 # conexão/endereço cliente
-conn, ender = server.accept()
+conection, address = server.accept()
 
-print(f'Conectido em em {ender}')
+print(f'Conectado em em {address}')
 
 while True:
-    hasher = hashlib.md5()
-    # tamanho de dados em bytes - bytes -> string
-    data = conn.recv(1024)
-    hasher.update(data)
-    
-    crip = hasher.hexdigest()
-    print(crip)
-    
-
-    print(data.decode())
+    data = conection.recv(1024)
     if not data:
-        print('Fechando conexão')
-        conn.close()
+        conection.close()
         break
-    conn.sendall(data)
+    conection.sendall(data)
