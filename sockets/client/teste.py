@@ -26,6 +26,7 @@ array.append(checksum)
 #print(array)
 print('-----')
 print(array)
+print(type(array))
 #print(bola := bytearray((('0x02' + new_word + '0x03' + str(checksum)).encode())))
 conta = 0
 for i in array:
