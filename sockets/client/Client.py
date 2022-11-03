@@ -20,15 +20,22 @@ array_data = bytearray()
 for i in data_client:
     if not array_data:
         array_data.append(result := literal_eval(hex(2)))
+        checksum ^= literal_eval(hex(2))
+        print(literal_eval(hex(2)))
+        print(type(literal_eval(hex(2))))
     
     checksum ^= literal_eval(hex(i))
+    print(literal_eval(hex(i)))
     array_data.append(result := literal_eval(hex(i)))
     new_data_client += hex(i)
-    print(hex(i), '\n')
-
+  
 
 array_data.append(result := literal_eval(hex(3)))
+checksum ^= literal_eval(hex(3))
+print(literal_eval(hex(3)))
 array_data.append(checksum)
+print(array_data)
+print(checksum)
 
 data = array_data
 client.sendall(data)
