@@ -18,31 +18,35 @@ conection, address = server.accept()
 
 print(f'Conectado em em {address}')
 
+
 checksum = 0
 array_data = bytearray()
 
 while True:
     data_server = conection.recv(1024)
+    index = len(data_server) - 1
+
     if not data_server:
         conection.close()
         break
-    
-    print(data_server)
-    index = len(data_server) -1
-    # key = data_server[index:].hex() # 
-    key = (data_server[index:].decode())
+    for i in data_server:
+        array_data.append(result := literal_eval(hex(i)))
 
-    print('---')
+    for i in array_data[index:]:  
+        checksum ^= (i)
+        print(checksum)
 
-    
-
-    print(type(key))
+    print(array_data)
+    print(type(array_data))
+    index = len(data_server) - 1
+    key = array_data[index:]
     print(key)
-    print('---')
-    # phase = data_server[:index].hex() # 
-    phase = (data_server[:index].decode())
+    phase = array_data[:index]
     print(phase)
-    print(type(phase))
+    print(f'final: {checksum}')
+
+    '''
+  
     for i in phase:
         print(hexlify(i.encode()))
         print(type(i.encode()))
@@ -51,5 +55,5 @@ while True:
         print(type(p.hex()))
         #checksum ^= p.hex()
     print('---')
-    print(checksum)
-    conection.sendall(phase.encode())
+    print(checksum)'''
+    conection.sendall(data_server)
