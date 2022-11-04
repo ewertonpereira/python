@@ -17,14 +17,14 @@ array_data = bytearray()
 
 for i in data_client:
     if not array_data:
-        array_data.append(result := literal_eval(hex(2)))
+        array_data.append(literal_eval(hex(2)))
         checksum ^= literal_eval(hex(2))
 
     checksum ^= literal_eval(hex(i))
-    array_data.append(result := literal_eval(hex(i)))
+    array_data.append(literal_eval(hex(i)))
     
   
-array_data.append(result := literal_eval(hex(3)))
+array_data.append(literal_eval(hex(3)))
 checksum ^= literal_eval(hex(3))
 array_data.append(checksum)
 print(array_data)
