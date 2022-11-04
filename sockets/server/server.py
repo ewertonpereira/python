@@ -5,14 +5,15 @@ import socket
 HOST = 'localhost'
 PORT = 50000
 
-# protocolo TCP
+# TCP protocol
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
 
 server.bind((HOST, PORT))
 server.listen()
 print('Aguardando conexão de um cliente...')
 
-# conexão/endereço cliente
+# receive conection/address from cliente
 conection, address = server.accept()
 
 print(f'Conectado em {address}')
