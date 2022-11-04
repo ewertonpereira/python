@@ -1,4 +1,3 @@
-from ast import literal_eval
 import socket
 
 
@@ -17,10 +16,8 @@ print('Aguardando conexão de um cliente...')
 conection, address = server.accept()
 
 print(f'Conectado em {address}')
-
-
 checksum = 0
-array_data = bytearray()
+data = bytearray()
 
 while True:
     data_server = conection.recv(1024)
@@ -29,20 +26,15 @@ while True:
     if not data_server:
         conection.close()
         break
-    for i in data_server:
-        array_data.append(literal_eval(hex(i)))
+    data.extend(data_server)
 
-    for i in array_data[index:]:
+    for i in data[index:]:
         checksum ^= i
 
-   
-    key = int.from_bytes(array_data[index:], "big")
-    #print(key)
-    
-    data = array_data[1:index-1]
-   
+    key = int.from_bytes(data[index:], "big")
+    message = data[1:index-1]
 
     if key == checksum:
-        conection.sendall(data)
+        conection.sendall(message)
     else:
         conection.close()
