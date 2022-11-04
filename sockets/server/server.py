@@ -15,7 +15,7 @@ print('Aguardando conexão de um cliente...')
 # conexão/endereço cliente
 conection, address = server.accept()
 
-print(f'Conectado em em {address}')
+print(f'Conectado em {address}')
 
 
 checksum = 0
@@ -29,7 +29,7 @@ while True:
         conection.close()
         break
     for i in data_server:
-        array_data.append(result := literal_eval(hex(i)))
+        array_data.append(literal_eval(hex(i)))
 
     for i in array_data[index:]:
         checksum ^= i
