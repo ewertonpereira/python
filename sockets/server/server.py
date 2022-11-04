@@ -1,6 +1,5 @@
 from ast import literal_eval
 import socket
-from binascii import hexlify
 
 
 HOST = 'localhost'
@@ -32,28 +31,17 @@ while True:
     for i in data_server:
         array_data.append(result := literal_eval(hex(i)))
 
-    for i in array_data[index:]:  
-        checksum ^= (i)
-        print(checksum)
+    for i in array_data[index:]:
+        checksum ^= i
 
-    print(array_data)
-    print(type(array_data))
-    index = len(data_server) - 1
-    key = array_data[index:]
-    print(key)
-    phase = array_data[:index]
-    print(phase)
-    print(f'final: {checksum}')
+   
+    key = int.from_bytes(array_data[index:], "big")
+    #print(key)
+    
+    data = array_data[1:index-1]
+   
 
-    '''
-  
-    for i in phase:
-        print(hexlify(i.encode()))
-        print(type(i.encode()))
-        #array_data.append(result := literal_eval(hex(i.encode())))
-        p = i.encode()
-        print(type(p.hex()))
-        #checksum ^= p.hex()
-    print('---')
-    print(checksum)'''
-    conection.sendall(data_server)
+    if key == checksum:
+        conection.sendall(data)
+    else:
+        conection.close()
