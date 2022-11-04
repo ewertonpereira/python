@@ -1,7 +1,7 @@
 import socket
-from ast import literal_eval
 
-# TCP
+
+# TCP protocol
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 HOST = 'localhost'
@@ -12,27 +12,17 @@ print('Conectado\n')
 
 
 data_client = str.encode(input('Digite sua mensagem: '))
+data = bytearray('2', 'utf-8')
 checksum = 0
-array_data = bytearray()
 
 for i in data_client:
-    if not array_data:
-        array_data.append(literal_eval(hex(2)))
-        checksum ^= literal_eval(hex(2))
+    checksum ^= i
 
-    checksum ^= literal_eval(hex(i))
-    array_data.append(literal_eval(hex(i)))
-    
-  
-array_data.append(literal_eval(hex(3)))
-checksum ^= literal_eval(hex(3))
-array_data.append(checksum)
-print(array_data)
+data.extend(data_client)
+data.extend(bytearray('3', 'utf-8'))
+data.append(checksum)
 
-
-data = array_data
 client.sendall(data)
 
-
 data_client_received = client.recv(1024)
-print(f'Mensagem ecoada: {data_client_received.decode()}')
+print(f'\nA Mensagem: ({data_client_received.decode()}) foi entrege')
