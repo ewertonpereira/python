@@ -1,41 +1,34 @@
 import socket
 from ast import literal_eval
 
-# T
+# TCP
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 HOST = 'localhost'
 PORT = 50000
 
 client.connect((HOST, PORT))
-print('Conectado')
+print('Conectado\n')
 
 
 data_client = str.encode(input('Digite sua mensagem: '))
-new_data_client = ''
 checksum = 0
 array_data = bytearray()
-
 
 for i in data_client:
     if not array_data:
         array_data.append(result := literal_eval(hex(2)))
         checksum ^= literal_eval(hex(2))
-        print(literal_eval(hex(2)))
-        print(type(literal_eval(hex(2))))
-    
-    checksum ^= literal_eval(hex(i))
-    print(literal_eval(hex(i)))
-    array_data.append(result := literal_eval(hex(i)))
-    new_data_client += hex(i)
-  
 
+    checksum ^= literal_eval(hex(i))
+    array_data.append(result := literal_eval(hex(i)))
+    
+  
 array_data.append(result := literal_eval(hex(3)))
 checksum ^= literal_eval(hex(3))
-print(literal_eval(hex(3)))
 array_data.append(checksum)
 print(array_data)
-print(checksum)
+
 
 data = array_data
 client.sendall(data)
