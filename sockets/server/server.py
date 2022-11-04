@@ -1,5 +1,5 @@
 import socket
-
+from sys import exit
 
 HOST = 'localhost'
 PORT = 50000
@@ -7,15 +7,20 @@ PORT = 50000
 # TCP protocol
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+try:
+    server.bind((HOST, PORT))
+except socket.error as err:
+    print(f'Bind falhou, código do erro: {err}')
+    exit()
 
-server.bind((HOST, PORT))
 server.listen()
-print('Aguardando conexão de um cliente...')
 
 # receive conection/address from cliente
 conection, address = server.accept()
 
+print('Aguardando conexão de um cliente...')
 print(f'Conectado em {address}')
+
 checksum = 0
 data = bytearray()
 
@@ -28,8 +33,8 @@ while True:
         break
     data.extend(data_server)
 
-    for i in data[index:]:
-        checksum ^= i
+    for element in data[index:]:
+        checksum ^= element
 
     key = int.from_bytes(data[index:], "big")
     message = data[1:index-1]
