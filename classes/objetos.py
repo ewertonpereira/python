@@ -5,9 +5,6 @@ Objetos -> São instâncias da classe, ou seja, após o mapeamento do objeto do 
 computacional, devemos podemos poder criar quantos objetos forem necessários. Podemos nos objetos/instâncias 
 de uma classe como variáveis do tipo na classe. 
 """
-from ast import USub
-
-
 class Lampada:
 
     def __init__(self, cor, voltagem, luminosidade):
