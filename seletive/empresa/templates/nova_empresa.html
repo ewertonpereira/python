@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block 'body' %}
+
+    <div class="wrapper">
+        <div class="box">
+            <div class="header">
+                <h3 class="titulo">Nova empresa</h3>
+            </div>
+
+            <div class="body-box">
+                <form action="" method="" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md">
+                            <label>Nome:</label>
+                            <input type="text" class="form-control" name="nome" placeholder="Digite seu nome...">
+                        </div>
+
+                        <div class="col-md">
+                            <label>E-mail:</label>
+                            <input type="email" class="form-control" name="email" placeholder="email@gmail.com">
+                        </div>
+
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md">
+                            <label>Cidade:</label>
+                            <input type="text" class="form-control" name="cidade" placeholder="Digite a cidade da empresa...">
+                        </div>
+
+                        <div class="col-md">
+                            <label>Endereço:</label>
+                            <input type="text" class="form-control" name="endereco" placeholder="Rua...">
+                        </div>
+
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md">
+                            <label>Nicho de mercado:</label>
+                            <select class="form-control" name="nicho">
+                                <option value="M">Marketing</option>
+                                <option value="N">Nutrição</option>
+                                <option value="D">Design</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md">
+                            <label>Tecnologias usadas:</label>
+                            <select class="form-control" name="tecnologias" multiple>                                
+                                <option value=""></option>
+                                
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md">
+                            <label>Característica da empresa:</label>
+                            <textarea name="caracteristicas" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md">
+                            <label>Logo:</label>
+                            <input type="file" class="form-control" name="logo">
+                        </div>
+                    </div>
+                    <br>
+                    <input type="submit" value="Nova empresa" class="btn btn-lg btn-orange">
+                </form>
+                
+            </div>
+        </div>
+    </div>
+
+
+{% endblock%}
