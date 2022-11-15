@@ -1,10 +1,7 @@
 import pandas as pd
-import Book
 
 
 class Bookcase:
-
-    
 
     def __init__(self,height, max_weight) -> None:
         #pd.set_option('display.max_rows', width)
