@@ -1,28 +1,37 @@
 import pandas as pd
-import Book
+from Tools import create_book, clear
 
 
 class Bookcase:
 
-    
-
-    def __init__(self,height, max_weight) -> None:
-        #pd.set_option('display.max_rows', width)
-        #pd.set_option('display.max_columns', height)
+    def __init__(self, size: int, max_weight: float) -> None:
         self.bookcase = pd.DataFrame(columns=['ID', 'Autor', 'Título', 'Ano', 'Peso'])
-        self.height = height
-        self.max_weight = max_weight
-        self.weight = 0
+        self.size: int = size
+        self.max_weight: float = max_weight
+        self.weight: float = 0
         
 
-    def add_book(self):
-        self.bookcase.loc[len(bookcase)] = ['harari', 'sapiens', 2010, 1.32]
-        #self.weight += book.weight
+    def add_book(self) -> None:
+        clear()
+        if len(self.bookcase) <= (self.size - 1):
+            book = create_book()
+            try_weight: float = self.weight + book.weight
+
+            if try_weight > self.max_weight:
+                clear()
+                print('Passou do peso')
+            else:
+                self.weight += book.weight
+                self.bookcase.loc[len(self.bookcase)] = [book.id, book.author, book.title, book.year, book.weight]  # type: ignore
+        else:
+            clear()
+            print('Estante lotada')
 
 
 if __name__ == '__main__':
-    bookcase = Bookcase(5, 5, 50)
-    Bookcase.add_book
-    print(f'Data: {bookcase.bookcase}\nAltura: {bookcase.height}\nLargura: {bookcase.width}\nPeso máximo: {bookcase.max_weight}\nPeso: {bookcase.weight}')
-
-    
+    bookcase = Bookcase(2, 2)
+    bookcase.add_book()
+    bookcase.add_book()
+    bookcase.add_book()
+    #print(bookcase.bookcase)
+    print(f'{bookcase.bookcase}\nAltura: {bookcase.size}\nPeso máximo: {bookcase.max_weight}Kg\nPeso total: {bookcase.weight}Kg')
