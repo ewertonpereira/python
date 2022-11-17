@@ -34,8 +34,6 @@ def get_year_book() -> int:
         clear()
         print('O ano deve estar entre 1500 e 2022:')
         year: int = get_year_book()
-
-
     return year
 
 
@@ -47,14 +45,11 @@ def get_weight_book() -> float:
         print('Digite apenas números.')
         weight: float = get_weight_book()
 
-
     if weight < 0 or weight > 2:
         clear()
         print('O peso do livro deve ser maior que zero e menor que 2kg')
         weight: float = get_weight_book()
-
     return weight
-
 
 
 def create_book() -> Book:
@@ -70,4 +65,3 @@ def create_book() -> Book:
 
 if __name__ == '__main__':
     pass
-    # print(result := get_weight_book())
