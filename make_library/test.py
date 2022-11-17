@@ -23,7 +23,7 @@ def add_book(df, height, weight, max_weight):
 def create_book():
     author = input('Digite o autor: ')
     title = input('Digite o título: ')
-    year = input('Digite o ano: ')
+    year = int(input('Digite o ano: '))
     weight = float(input('Digite o peso: '))
     book = Book(author,title, year, weight)
 
