@@ -1,10 +1,14 @@
 import pandas as pd
-from Tools import create_book, clear
+import Book
 
 
 class Bookcase:
 
-    def __init__(self, size: int, max_weight: float) -> None:
+    
+
+    def __init__(self,height, max_weight) -> None:
+        #pd.set_option('display.max_rows', width)
+        #pd.set_option('display.max_columns', height)
         self.bookcase = pd.DataFrame(columns=['ID', 'Autor', 'Título', 'Ano', 'Peso'])
         self.size: int = size
         self.max_weight: float = max_weight
