@@ -11,7 +11,7 @@ def get_author_book() -> str:
     if not isinstance(author, str):
         print('Digite apenas letras: ')
         author: str = get_author_book()
-    return author
+    return author.upper()
 
 
 def get_title_book() -> str:
@@ -19,7 +19,7 @@ def get_title_book() -> str:
     if not isinstance(title, str):
         print('Digite apenas letras: ')
         title: str = get_author_book()
-    return title
+    return title.upper()
 
 
 def get_year_book() -> int:
@@ -58,6 +58,7 @@ def get_weight_book() -> float:
 
 
 def create_book() -> Book:
+    clear()
     author: str = get_author_book()
     title: str = get_title_book()
     year: int = get_year_book()
