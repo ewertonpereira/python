@@ -39,7 +39,7 @@ def get_year_book() -> int:
 
 def get_weight_book() -> float:
     try:
-        weight: float = float(input('Digite o peso do livro: '))
+         weight: float = float(input('Digite o peso do livro: '))
     except ValueError:
         clear()
         print('Digite apenas números.')
@@ -52,7 +52,7 @@ def get_weight_book() -> float:
     return weight
 
 
-def create_book() -> Book:
+def register_book() -> Book:
     clear()
     author: str = get_author_book()
     title: str = get_title_book()
