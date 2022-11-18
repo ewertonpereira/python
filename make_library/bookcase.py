@@ -1,5 +1,5 @@
 import pandas as pd
-from Tools import create_book, clear
+from Tools import register_book
 
 class Bookcase:
 
@@ -12,9 +12,9 @@ class Bookcase:
         
 
     def add_book(self) -> None:
-        clear()
+        self.clear()
         if len(self.bookcase) <= (self.size - 1):
-            book = create_book()
+            book = register_book()
             try_weight: float = self.weight + book.weight
 
             if try_weight > self.max_weight:
