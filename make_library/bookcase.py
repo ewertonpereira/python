@@ -33,5 +33,4 @@ if __name__ == '__main__':
     bookcase.add_book()
     bookcase.add_book()
     bookcase.add_book()
-    #print(bookcase.bookcase)
     print(f'{bookcase.bookcase}\nAltura: {bookcase.size}\nPeso máximo: {bookcase.max_weight}Kg\nPeso total: {bookcase.weight}Kg')
