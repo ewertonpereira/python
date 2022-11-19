@@ -6,17 +6,25 @@ def clear():
     return system('cls')
 
 
+def is_alpha_space(string):
+    return all(char.isalpha() or char.isspace() for char in string)
+
+
 def get_author_book() -> str:
-    author: str = input('Digite o autor: ')
-    if not isinstance(author, str):
-        print('Digite apenas letras: ')
-        author: str = get_author_book()
+    author: str = input('Digite o autor: ').strip()
+    test = author.replace(' ','')
+    if not test.isalpha():
+       print('Digite apenas letras: ')
+       author: str = get_author_book()
+    if is_alpha_space(author) != True:
+        #print('Digite apenas letras: ')
+        #author: str = get_author_book()
     return author.upper()
 
 
 def get_title_book() -> str:
-    title: str = input('Digite o título do livro: ')
-    if not isinstance(title, str):
+    title: str = input('Digite o título do livro: ').strip()
+    if not title.isdigit():
         print('Digite apenas letras: ')
         title: str = get_author_book()
     return title.upper()
@@ -64,4 +72,5 @@ def register_book() -> Book:
 
 
 if __name__ == '__main__':
-    pass
+    #pass
+    print( result := get_author_book())
