@@ -1,5 +1,6 @@
 from Book import Book
 from os import system
+from datetime import datetime
 
 
 def clear():
@@ -19,7 +20,7 @@ def get_author_book() -> str:
     if is_alpha_space(author) != True:
         #print('Digite apenas letras: ')
         #author: str = get_author_book()
-    return author.upper()
+        return author.upper()
 
 
 def get_title_book() -> str:
@@ -31,6 +32,7 @@ def get_title_book() -> str:
 
 
 def get_year_book() -> int:
+    current_year: int = datetime.today().year
     try:
         year: int = int(input('Digite o ano de lançamento do livro: '))
     except ValueError:
@@ -38,7 +40,7 @@ def get_year_book() -> int:
         print(f'Digite apenas números!')
         year: int = get_year_book()
 
-    if year < 1500 or year > 2022:
+    if year < 1500 or year > current_year:
         clear()
         print('O ano deve estar entre 1500 e 2022:')
         year: int = get_year_book()
