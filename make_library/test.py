@@ -1,5 +1,6 @@
 import pandas as pd
 from Book import Book
+from datetime import datetime
 
 height = 2
 weight = 0
@@ -29,7 +30,7 @@ def create_book():
 
     return book
 
-weight = add_book(df, height, weight, max_weight)
+#weight = add_book(df, height, weight, max_weight)
 #weight = add_book(df, height, weight, max_weight)
 #weight = add_book(df, height, weight, max_weight)
 
@@ -37,3 +38,5 @@ print(df)
 print(weight)
 # book = create_book()
 # print(book.id, book.author, book.title, book.year, book.weight)
+print(result := datetime.today().year)
+print(type(result))
