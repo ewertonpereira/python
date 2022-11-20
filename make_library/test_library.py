@@ -14,11 +14,5 @@ class TestBookCase(unittest.TestCase):
         self.assertEqual(result, 'EWERTON')
         
         
-    # def test_spaces(self):
-    #     with self.assertRaises(Exception):
-    #         self.get_author_book('EWERTON  PEREIRA')
-        
-
-
 if __name__ == '__main__':
     unittest.main()
