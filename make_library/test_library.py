@@ -1,18 +1,20 @@
-import unittest
-from Tools import get_author_book
+from unittest import mock, TestCase
+from tools import get_author_book
 
 
-class TestBookCase(unittest.TestCase):
+class TestBookCase(TestCase):
     
-    def setUp(self) -> None:
-        self.get_author_book = get_author_book()
-
-
-    def test_get_author_book(self):
-        result = self.get_author_book
-        #print(result)
-        self.assertEqual(result, 'EWERTON')
+    # @mock.patch('tools.get_author_book', return_value='ewerton')
+    # def test_get_author_book(self, author):
+    #     self.assertEqual(get_author_book(), 'ewerton')
         
-        
-if __name__ == '__main__':
-    unittest.main()
+    @mock.patch('tools.get_author_book', side_effect=[
+        'ewerton',
+        'eduardo',
+        'kerlen'
+     ])
+    def test_get_author_book(self, author):
+        self.assertEqual(get_author_book(), 'ewerton')
+        self.assertEqual(get_author_book(), 'eduardo')
+        self.assertEqual(get_author_book(), 'kerlen')
+
