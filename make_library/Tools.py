@@ -11,22 +11,28 @@ def is_alpha_space(string):
     return all(char.isalpha() or char.isspace() for char in string)
 
 
+def get_name_person() -> str:
+    name: str = input('Digite seu nome: ').strip()
+    test = name.replace(' ','')
+    if not test.isalpha():
+       print('Digite apenas letras: ')
+       name: str = get_name_person()
+    return name.upper()
+
+
 def get_author_book() -> str:
-    author: str = input('Digite o autor: ').strip()
+    author: str = input('Digite o nome do autor: ').strip()
     test = author.replace(' ','')
     if not test.isalpha():
        print('Digite apenas letras: ')
        author: str = get_author_book()
-    if is_alpha_space(author) != True:
-        #print('Digite apenas letras: ')
-        #author: str = get_author_book()
-        return author.upper()
+    return author.upper()
 
 
 def get_title_book() -> str:
     title: str = input('Digite o título do livro: ').strip()
-    if not title.isdigit():
-        print('Digite apenas letras: ')
+    if not isinstance(title, str):
+        print('Digite o título corretamente: ')
         title: str = get_author_book()
     return title.upper()
 
@@ -74,5 +80,4 @@ def register_book() -> Book:
 
 
 if __name__ == '__main__':
-    #pass
-    print( result := get_author_book())
+    pass
