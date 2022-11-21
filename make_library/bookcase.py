@@ -29,7 +29,7 @@ class Bookcase:
 
 
 if __name__ == '__main__':
-    bookcase = Bookcase(2, 2)
+    bookcase = Bookcase(10, 2)
     bookcase.add_book()
     bookcase.add_book()
     bookcase.add_book()
