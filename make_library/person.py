@@ -4,8 +4,8 @@ class Person:
         self.__name: str = name
 
 
-    def get_name(self):
-        return self.__name
+    # def get_name(self):
+    #     return self.__name
 
 
 if __name__ == '__main__':
