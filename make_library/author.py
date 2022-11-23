@@ -5,14 +5,17 @@ from uuid import UUID, uuid4
 
 class Author(Person):
     
-    def __init__(self, name):
+    def __init__(self, name: str):
         self.id: UUID = uuid4()
         super().__init__(name)
         
 
-    
     def get_author_name(self):
-        return f'O nome do autor é {self._Person__name.title()}.'  # type: ignore
+        return self._Person__name.title()  # type: ignore
+
+
+    # def __str__(self) -> str:
+    #     return f'Autor: {self._Person__name.title()}\n' # type: ignore
 
         
 if __name__ == '__main__':
