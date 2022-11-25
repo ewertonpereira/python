@@ -75,7 +75,6 @@ def register_book() -> Book:
     year: int = get_year_book()
     weight: float = get_weight_book()
     book: Book = Book(author,title, year, weight)
-
     return book
 
 
