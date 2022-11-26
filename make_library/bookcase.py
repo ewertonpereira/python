@@ -3,7 +3,6 @@ from tools import register_book, clear
 
 class Bookcase:
 
-    
     def __init__(self,size, max_weight) -> None:
         self.bookcase = pd.DataFrame(columns=['ID', 'Autor', 'Título', 'Ano', 'Peso'])
         self.size: int = size
