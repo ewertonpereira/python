@@ -36,7 +36,5 @@ def create_book():
 
 print(df)
 print(weight)
-# book = create_book()
-# print(book.id, book.author, book.title, book.year, book.weight)
 print(result := datetime.today().year)
 print(type(result))
