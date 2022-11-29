@@ -7,17 +7,23 @@ def clear():
     return system('cls')
 
 
-def is_alpha_space(string):
-    return all(char.isalpha() or char.isspace() for char in string)
+def strip_midle_space(word: str) -> str:
+    new_word: str = ''
+    step: str = ''
+    for letter in word:
+        if letter != step:
+            new_word += letter
+            step = letter
+    return new_word
 
 
-def get_name_person() -> str:
+def get_name() -> str:
     name: str = input('Digite seu nome: ').strip()
     test = name.replace(' ','')
     if not test.isalpha():
        print('Digite apenas letras: ')
-       name: str = get_name_person()
-    return name.upper()
+       name: str = get_name()
+    return strip_midle_space(name).upper()
 
 
 def get_author_book() -> str:
@@ -26,7 +32,7 @@ def get_author_book() -> str:
     if not test.isalpha():
        print('Digite apenas letras: ')
        author: str = get_author_book()
-    return author.upper()
+    return strip_midle_space(author).upper()
 
 
 def get_title_book() -> str:
@@ -34,7 +40,7 @@ def get_title_book() -> str:
     if not isinstance(title, str):
         print('Digite o título corretamente: ')
         title: str = get_author_book()
-    return title.upper()
+    return strip_midle_space(title).upper()
 
 
 def get_year_book() -> int:
