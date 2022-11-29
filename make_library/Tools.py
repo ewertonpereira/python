@@ -1,10 +1,25 @@
 from Book import Book
 from os import system
 from datetime import datetime
+import re
 
 
 def clear():
     return system('cls')
+
+# start email
+def regex_email(email) -> bool:
+    regex = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
+    return True if re.fullmatch(regex, email) else False
+    
+
+def get_email() -> str:
+    email: str = input('Digite seu email: ')
+    if not regex_email(email):
+        print('Email inválido!')
+        email: str = get_email()
+    return email
+# end email
 
 
 def strip_midle_space(word: str) -> str:
