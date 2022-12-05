@@ -31,8 +31,7 @@ def create_book():
     return book
 
 #weight = add_book(df, height, weight, max_weight)
-#weight = add_book(df, height, weight, max_weight)
-#weight = add_book(df, height, weight, max_weight)
+
 
 print(df)
 print(weight)
