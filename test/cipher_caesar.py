@@ -47,7 +47,7 @@ def encode(element):
 def decode(element):
     for letter in range(len(alphabet)):
         if alphabet[letter] == element:
-            return alphabet[(letter - 3) % len(alphabet)]
+            return alphabet[(letter - jump) % len(alphabet)]
         elif element not in alphabet:
             return element
 
