@@ -8,21 +8,21 @@ def clear():
     return system('cls')
 
 
-def get_jump():
+def get_jump() -> int:
     clear()
-    number = input('Digite o número de saltos para criptografia: \n')
-    return int(number)
+    number: int = int(input('Digite o número de saltos para criptografia: \n'))
+    return number
 
 
-def get_sentence():
+def get_sentence() -> list[str]:
     clear()
-    sentence = list(input('Digite sua sentença: \n'))
+    sentence:list[str] = list(input('Digite sua sentença: \n'))
     return sentence
 
 
-def question():
+def question() -> None:
     clear()
-    question = input(
+    question: str = input(
         'Que tipo de operação você deseja fazer?\n\n0 - Criptografar\n1 - Descriptografar\nQualquer tecla restante para sair\n\n-> ')
 
     if question == '0':
@@ -33,21 +33,26 @@ def question():
         exit()
 
 
-jump = get_jump()
+jump: int = get_jump()
 
-
-def encode(element):
+def encode(element: str):
     for letter in range(len(alphabet)):
         if alphabet[letter] == element:
-            return alphabet[(letter + jump) % len(alphabet)]
+            if element.isupper():
+                return alphabet[(letter + jump) % len(alphabet)].upper()
+            else: 
+                return alphabet[(letter + jump) % len(alphabet)].lower()
         elif element not in alphabet:
             return element
 
 
-def decode(element):
+def decode(element: str):
     for letter in range(len(alphabet)):
         if alphabet[letter] == element:
-            return alphabet[(letter - jump) % len(alphabet)]
+            if element.isupper():
+                return alphabet[(letter - jump) % len(alphabet)].upper()
+            else: 
+                return alphabet[(letter - jump) % len(alphabet)].lower()
         elif element not in alphabet:
             return element
 
