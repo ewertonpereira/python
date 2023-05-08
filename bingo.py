@@ -39,7 +39,7 @@ def create_bingo_card(matrix: list) -> list[list[int]]:
     for row in range(len(bingo_card)):
         for column in range(len(bingo_card)):
             if row == 2 and column == 2:
-                bingo_card[row].append('x')
+                bingo_card[row].append('x') # type: ignore
             elif column == 0:
                 shuffle(matrix[0])
                 bingo_card[row].append(element := matrix[0].pop())
@@ -82,10 +82,10 @@ def check_number(bingo_card: list[list], number: int) -> None:
 
 
 # raffle random numbers by letter
-def raffle(card: list[list]) -> int:
+def raffle(card: list[list]):
     for row in range(len(card[0])):
         for column in range(len(card)):
-            bingo: list[int] = ['b', 'i', 'n', 'g', 'o']
+            bingo: list[int] = ['b', 'i', 'n', 'g', 'o'] # type: ignore
             shuffle(bingo)
 
             if bingo[0] == 'b':
@@ -188,7 +188,7 @@ def check_bingo(bingo_card: list[list], name: str) -> None:
     check_secondary_diagonal(bingo_card, name)
 
 
-def question() -> bool:
+def question() -> bool: # type: ignore
     answer: str = input('\nAperte ENTER para começar ou digite SAIR para abandonar a partida: ').upper()
     if answer == 'SAIR':
         return True
