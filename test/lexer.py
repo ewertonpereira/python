@@ -9,36 +9,48 @@ Delimitadores balanceados: '(', ')', '{', '}';
 """
 import re
 
-spec = [    # Define as especificações da ER;
-        ('NUM',  r'\d+(\.\d+)?'),
-        ('ID',   r'[A-Za-z] +'),
-        ('ATRIB',   r'[=]'),
-        ('SKIP', r'[ \n\t]'),
-        ('ADD', r'[+]'),
-        ('MUL', r'[*]')
+spec = [
+    ('NUM', r'\d+(?:[\.,]\d+)?'),
+    ('ID', r'[A-Za-z]+'),
+    ('ID_VAR', r'[A-Za-z]+'),
+    ('ATRIB', r'[=]'),
+    ('SKIP', r'[ \n\t]'),
+    ('ADD', r'[+]'),
+    ('SUB', r'[-]'),
+    ('MUL', r'[*]'),
+    ('DIV', r'[/]'),
+    ('EXP', r'[\^]'),
+    ('IF', r'if'),
+    ('WHILE', r'while'),
+    ('OPEN_PAREN', r'\('),
+    ('CLOSE_PAREN', r'\)'),
+    ('OPEN_BRACE', r'\{'),
+    ('CLOSE_BRACE', r'\}'),
+    ('COMMA', r','),
 ]
 
-#  Concatenação das sequências de definões de <spec> em  um array e <compila> 
-#  o padrão de expressão regular em um objeto expressão regular, que pode 
-#  ser reutilizado várias vezes;
 tok = '|'.join('(?P<%s>%s)' % pair for pair in spec)
 get_token = re.compile(tok).match
 
+
 def lexico(codigo):
-  #  aplica o <match> do <get_token> para procurar um padrão 
-  #  na string <codigo> a partir da posição 0;
-  val=get_token(codigo,0)  
+    val = get_token(codigo, 0)
 
-  while val is not None:
-    token = val.lastgroup # token = último grupo encontrado no <match>
-    lexema = val.group()  # lexema = grupo da correspondência
-    if token != 'SKIP':   # Evita os símbolods indesejáveis
-      yield('TOKEN: %s\t VAL: %s' %(token, lexema)) # retorna a estrutura
-    pos = val.end()       # Reposiciona o próximo símbolo a ser testado
-    val=get_token(codigo,pos) # Aplica o <match> para a sequencia
+    while val is not None:
+        token = val.lastgroup
+        lexema = val.group()
+        if token != 'SKIP':
+            if token == 'ID' and lexema.strip() in ['if', 'while']:
+                token = lexema.strip().upper()
+            elif token == 'ID':
+                token = 'ID_VAR'
+            yield ('TOKEN: %s\t VAL: %s' % (token, lexema))
+        pos = val.end()
+        val = get_token(codigo, pos)
 
 
-entrada = 'TOTAL = soma             while      45.0 + 56.34 * total/98'
+entrada = 'TOTAL = soma, while if  45.0 + 56,34 * = ^ total / 98'
+
 
 for token in lexico(entrada):
     print(token)
