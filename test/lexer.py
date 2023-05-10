@@ -11,22 +11,32 @@ import re
 
 spec = [
     ('NUM', r'\d+(?:[\.,]\d+)?'),
-    ('ID', r'[A-Za-z]+'),
-    ('ID_VAR', r'[A-Za-z]+'),
+    ('ID', r'[A-Za-z]+\d*'),
     ('ATRIB', r'[=]'),
     ('SKIP', r'[ \n\t]'),
     ('ADD', r'[+]'),
     ('SUB', r'[-]'),
     ('MUL', r'[*]'),
     ('DIV', r'[/]'),
-    ('EXP', r'[\^]'),
+    ('POW', r'[\^]'),
+    ('LT', r'\<'),
+    ('GT', r'\>'),
+    ('LTE', r'\<='),
+    ('GTE', r'\>='),
+    ('EQ', r'=='),
+    ('NEQ', r'<>'),
     ('IF', r'if'),
+    ('VAR', r'var'),
     ('WHILE', r'while'),
-    ('OPEN_PAREN', r'\('),
-    ('CLOSE_PAREN', r'\)'),
-    ('OPEN_BRACE', r'\{'),
-    ('CLOSE_BRACE', r'\}'),
+    ('LPAREN', r'\('),
+    ('RPAREN', r'\)'),
+    ('LBRACE', r'\{'),
+    ('RBRACE', r'\}'),
     ('COMMA', r','),
+    ('SEMICOLON', r';'),
+    ('ELSE', r'else'),
+    ('INT', r'int'),
+    ('REAL', r'real'),
 ]
 
 tok = '|'.join('(?P<%s>%s)' % pair for pair in spec)
@@ -40,17 +50,30 @@ def lexico(codigo):
         token = val.lastgroup
         lexema = val.group()
         if token != 'SKIP':
-            if token == 'ID' and lexema.strip() in ['if', 'while']:
+            if token == 'ID' and lexema.strip() in ['if', 'while', 'var', 'int', 'real']:
                 token = lexema.strip().upper()
             elif token == 'ID':
-                token = 'ID_VAR'
+                if re.match(r'^[A-Za-z]+$', lexema):
+                    token = 'ID_VAR'
+                else:
+                    token = 'ID'
             yield ('TOKEN: %s\t VAL: %s' % (token, lexema))
         pos = val.end()
         val = get_token(codigo, pos)
 
 
-entrada = 'TOTAL = soma, while if  45.0 + 56,34 * = ^ total / 98'
+# Código fornecido
+def ler_codigo(nome_arquivo):
+    with open(nome_arquivo, 'r') as arquivo:
+        codigo = arquivo.read()
+        
+    return codigo
 
 
-for token in lexico(entrada):
+# Execute a análise léxica e sintática
+
+codigo = ler_codigo('codigo.txt')
+
+
+for token in lexico(codigo):
     print(token)
