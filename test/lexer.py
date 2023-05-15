@@ -9,42 +9,44 @@ Delimitadores balanceados: '(', ')', '{', '}';
 """
 import re
 
-spec = [
-    ('NUM', r'\d+(?:[\.,]\d+)?'),
-    ('ID', r'[A-Za-z]+\d*'),
-    ('ATRIB', r'[=]'),
-    ('SKIP', r'[ \n\t]'),
-    ('ADD', r'[+]'),
-    ('SUB', r'[-]'),
-    ('MUL', r'[*]'),
-    ('DIV', r'[/]'),
-    ('POW', r'[\^]'),
-    ('LT', r'\<'),
-    ('GT', r'\>'),
-    ('LTE', r'\<='),
-    ('GTE', r'\>='),
-    ('EQ', r'=='),
-    ('NEQ', r'<>'),
-    ('IF', r'if'),
-    ('VAR', r'var'),
-    ('WHILE', r'while'),
-    ('LPAREN', r'\('),
-    ('RPAREN', r'\)'),
-    ('LBRACE', r'\{'),
-    ('RBRACE', r'\}'),
-    ('COMMA', r','),
-    ('SEMICOLON', r';'),
-    ('ELSE', r'else'),
-    ('INT', r'int'),
-    ('REAL', r'real'),
-]
-
-tok = '|'.join('(?P<%s>%s)' % pair for pair in spec)
-get_token = re.compile(tok).match
-
 
 def lexico(codigo):
-    val = get_token(codigo, 0)
+    spec = [
+        ('NUM', r'\d+(?:[\.,]\d+)?'),
+        ('ID', r'[A-Za-z]+\d*'),
+        ('ATRIB', r'[=]'),
+        ('SKIP', r'[ \n\t]'),
+        ('ADD', r'[+]'),
+        ('SUB', r'[-]'),
+        ('MUL', r'[*]'),
+        ('DIV', r'[/]'),
+        ('POW', r'[\^]'),
+        ('LT', r'\<'),
+        ('GT', r'\>'),
+        ('LTE', r'\<='),
+        ('GTE', r'\>='),
+        ('EQ', r'=='),
+        ('NEQ', r'<>'),
+        ('IF', r'if'),
+        ('VAR', r'var'),
+        ('WHILE', r'while'),
+        ('LPAREN', r'\('),
+        ('RPAREN', r'\)'),
+        ('LBRACE', r'\{'),
+        ('RBRACE', r'\}'),
+        ('COMMA', r','),
+        ('SEMICOLON', r';'),
+        ('ELSE', r'else'),
+        ('INT', r'int'),
+        ('REAL', r'real'),
+        ('UNKNOWN', r'.'),
+    ]
+
+    tok = '|'.join('(?P<%s>%s)' % pair for pair in spec)
+    get_token = re.compile(tok).match
+
+    pos = 0
+    val = get_token(codigo, pos)
 
     while val is not None:
         token = val.lastgroup
@@ -58,22 +60,55 @@ def lexico(codigo):
                 else:
                     token = 'ID'
             yield ('TOKEN: %s\t VAL: %s' % (token, lexema))
+
+        # if token == 'UNKNOWN':
+        #     print(f"Token desconhecido encontrado: {lexema}")
+
         pos = val.end()
         val = get_token(codigo, pos)
 
 
-# Código fornecido
 def ler_codigo(nome_arquivo):
     with open(nome_arquivo, 'r') as arquivo:
         codigo = arquivo.read()
-        
+
     return codigo
 
 
-# Execute a análise léxica e sintática
+def analisar_codigo(nome_arquivo):
+    codigo = ler_codigo(nome_arquivo)
 
-codigo = ler_codigo('codigo.txt')
+    for token in lexico(codigo):
+        print(token)
 
 
-for token in lexico(codigo):
-    print(token)
+def verificar_tokens(nome_arquivo):
+    with open(nome_arquivo, 'r') as arquivo:
+        codigo = arquivo.read()
+
+    spec = [
+        ('UNKNOWN', r'.'),
+    ]
+
+    tok = '|'.join('(?P<%s>%s)' % pair for pair in spec)
+    get_token = re.compile(tok).match
+
+    pos = 0
+    val = get_token(codigo, pos)
+
+    while val is not None:
+        token = val.lastgroup
+
+        if token == 'UNKNOWN':
+            return False
+
+        pos = val.end()
+        val = get_token(codigo, pos)
+
+    return True
+
+
+analisar_codigo('codigo.txt')
+
+tokens_presentes = verificar_tokens('codigo.txt')
+print(tokens_presentes)
