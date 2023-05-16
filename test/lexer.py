@@ -2,8 +2,7 @@ import re
 from typing import Generator, List, Tuple, Callable, Optional, Match
 
 
-def lexicon(code: str) -> Generator[str, None, None]:
-    spec: List[Tuple[str, str]] = [
+spec: List[Tuple[str, str]] = [
         ('NUM', r'\d+(?:[\.,]\d+)?'),
         ('ID', r'[A-Za-z]+\d*'),
         ('ATRIB', r'[=]'),
@@ -35,6 +34,8 @@ def lexicon(code: str) -> Generator[str, None, None]:
         ('UNKNOWN', r'.'),
     ]
 
+def lexicon(code: str) -> Generator[str, None, None]:
+    
     tok: str = '|'.join('(?P<%s>%s)' % pair for pair in spec)
     get_token: Callable[[str, int, int], Optional[Match[str]]] = re.compile(tok).match
 
@@ -74,10 +75,6 @@ def analyze_code(file_name: str) -> None:
 def verify_tokens(file_name: str) -> bool:
     with open(file_name, 'r') as file:
         code = file.read()
-
-    spec: List[Tuple[str, str]] = [
-        ('UNKNOWN', r'.'),
-    ]
 
     tok: str = '|'.join('(?P<%s>%s)' % pair for pair in spec)
     get_token: Callable[[str, int, int], Optional[Match[str]]] = re.compile(tok).match
