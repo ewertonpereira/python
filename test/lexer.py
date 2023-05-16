@@ -1,17 +1,9 @@
-"""
-TAREFA
-Complementar o analisador para que reconheça:
-
-Operadores Aritméticos: '+', '-', '*', '/', '^';
-Comando de atribuição: '=';
-Palavra reservada: 'if', 'while';
-Delimitadores balanceados: '(', ')', '{', '}';
-"""
 import re
+from typing import Generator, List, Tuple, Callable, Optional, Match
 
 
-def lexico(codigo):
-    spec = [
+def lexicon(code: str) -> Generator[str, None, None]:
+    spec: List[Tuple[str, str]] = [
         ('NUM', r'\d+(?:[\.,]\d+)?'),
         ('ID', r'[A-Za-z]+\d*'),
         ('ATRIB', r'[=]'),
@@ -29,6 +21,7 @@ def lexico(codigo):
         ('NEQ', r'<>'),
         ('IF', r'if'),
         ('VAR', r'var'),
+        ('FOR', r'for'),
         ('WHILE', r'while'),
         ('LPAREN', r'\('),
         ('RPAREN', r'\)'),
@@ -42,59 +35,55 @@ def lexico(codigo):
         ('UNKNOWN', r'.'),
     ]
 
-    tok = '|'.join('(?P<%s>%s)' % pair for pair in spec)
-    get_token = re.compile(tok).match
+    tok: str = '|'.join('(?P<%s>%s)' % pair for pair in spec)
+    get_token: Callable[[str, int, int], Optional[Match[str]]] = re.compile(tok).match
 
-    pos = 0
-    val = get_token(codigo, pos)
+    pos: int = 0
+    val: Optional[Match[str]] = get_token(code, pos)
 
     while val is not None:
-        token = val.lastgroup
-        lexema = val.group()
+        token: Optional[str] = val.lastgroup
+        lexeme: Optional[str] = val.group()
         if token != 'SKIP':
-            if token == 'ID' and lexema.strip() in ['if', 'while', 'var', 'int', 'real']:
-                token = lexema.strip().upper()
+            if token == 'ID' and lexeme.strip() in ['if', 'while', 'var', 'int', 'real, for']:
+                token = lexeme.strip().upper()
             elif token == 'ID':
-                if re.match(r'^[A-Za-z]+$', lexema):
+                if re.match(r'^[A-Za-z]+$', lexeme):
                     token = 'ID_VAR'
                 else:
                     token = 'ID'
-            yield ('TOKEN: %s\t VAL: %s' % (token, lexema))
-
-        # if token == 'UNKNOWN':
-        #     print(f"Token desconhecido encontrado: {lexema}")
-
+            yield ('TOKEN: %s\t VAL: %s' % (token, lexeme))
         pos = val.end()
-        val = get_token(codigo, pos)
+        val = get_token(code, pos)
 
 
-def ler_codigo(nome_arquivo):
-    with open(nome_arquivo, 'r') as arquivo:
-        codigo = arquivo.read()
+def read_code(file_name: str) -> str:
+    with open(file_name, 'r') as file:
+        code = file.read()
 
-    return codigo
+    return code
 
 
-def analisar_codigo(nome_arquivo):
-    codigo = ler_codigo(nome_arquivo)
+def analyze_code(file_name: str) -> None:
+    code = read_code(file_name)
 
-    for token in lexico(codigo):
+    for token in lexicon(code):
         print(token)
 
 
-def verificar_tokens(nome_arquivo):
-    with open(nome_arquivo, 'r') as arquivo:
-        codigo = arquivo.read()
+def verify_tokens(file_name: str) -> bool:
+    with open(file_name, 'r') as file:
+        code = file.read()
 
-    spec = [
+    spec: List[Tuple[str, str]] = [
         ('UNKNOWN', r'.'),
     ]
 
-    tok = '|'.join('(?P<%s>%s)' % pair for pair in spec)
-    get_token = re.compile(tok).match
+    tok: str = '|'.join('(?P<%s>%s)' % pair for pair in spec)
+    get_token: Callable[[str, int, int], Optional[Match[str]]] = re.compile(tok).match
 
-    pos = 0
-    val = get_token(codigo, pos)
+    pos: int = 0
+    val: Optional[Match[str]] = get_token(code, pos)
 
     while val is not None:
         token = val.lastgroup
@@ -103,12 +92,11 @@ def verificar_tokens(nome_arquivo):
             return False
 
         pos = val.end()
-        val = get_token(codigo, pos)
+        val = get_token(code, pos)
 
     return True
 
 
-analisar_codigo('codigo.txt')
-
-tokens_presentes = verificar_tokens('codigo.txt')
-print(tokens_presentes)
+if __name__ == '__main__':
+    analyze_code('codigo.txt')
+    print(check_different_tokens := verify_tokens('codigo.txt'))
