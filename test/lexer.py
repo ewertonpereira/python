@@ -3,41 +3,41 @@ from typing import Generator, List, Tuple, Callable, Optional, Match
 
 
 spec: List[Tuple[str, str]] = [
-        ('NUM', r'\d+(?:[\.,]\d+)?'),
-        ('ID', r'[A-Za-z]+\d*'),
-        ('ATRIB', r'[=]'),
-        ('SKIP', r'[ \n\t]'),
-        ('ADD', r'[+]'),
-        ('SUB', r'[-]'),
-        ('MUL', r'[*]'),
-        ('DIV', r'[/]'),
-        ('POW', r'[\^]'),
-        ('LT', r'\<'),
-        ('GT', r'\>'),
-        ('LTE', r'\<='),
-        ('GTE', r'\>='),
-        ('EQ', r'=='),
-        ('NEQ', r'<>'),
-        ('IF', r'if'),
-        ('VAR', r'var'),
-        ('FOR', r'for'),
-        ('WHILE', r'while'),
-        ('LPAREN', r'\('),
-        ('RPAREN', r'\)'),
-        ('LBRACE', r'\{'),
-        ('RBRACE', r'\}'),
-        ('COMMA', r','),
-        ('SEMICOLON', r';'),
-        ('ELSE', r'else'),
-        ('INT', r'int'),
-        ('REAL', r'real'),
-        ('STR', r'str'),
-        ('BOOL', r'bool'),
-        ('UNKNOWN', r'.'),
-    ]
+    ('NUM', r'\d+(?:[\.,]\d+)?'),
+    ('ID', r'[A-Za-z]+\d*'),
+    ('ATRIB', r'[=]'),
+    ('SKIP', r'[ \n\t]'),
+    ('ADD', r'[+]'),
+    ('SUB', r'[-]'),
+    ('MUL', r'[*]'),
+    ('DIV', r'[/]'),
+    ('POW', r'[\^]'),
+    ('LT', r'\<'),
+    ('GT', r'\>'),
+    ('LTE', r'\<='),
+    ('GTE', r'\>='),
+    ('EQ', r'=='),
+    ('NEQ', r'<>'),
+    ('IF', r'if'),
+    ('VAR', r'var'),
+    ('FOR', r'for'),
+    ('WHILE', r'while'),
+    ('LPAREN', r'\('),
+    ('RPAREN', r'\)'),
+    ('LBRACE', r'\{'),
+    ('RBRACE', r'\}'),
+    ('COMMA', r','),
+    ('SEMICOLON', r';'),
+    ('ELSE', r'else'),
+    ('INT', r'int'),
+    ('REAL', r'real'),
+    ('STR', r'str'),
+    ('BOOL', r'bool'),
+    ('UNKNOWN', r'.'),
+]
+
 
 def lexicon(code: str) -> Generator[str, None, None]:
-    
     tok: str = '|'.join('(?P<%s>%s)' % pair for pair in spec)
     get_token: Callable[[str, int, int], Optional[Match[str]]] = re.compile(tok).match
 
@@ -50,11 +50,6 @@ def lexicon(code: str) -> Generator[str, None, None]:
         if token != 'SKIP':
             if token == 'ID' and lexeme.strip() in ['if', 'while', 'var', 'int', 'real', 'for', 'str', 'bool']:
                 token = lexeme.strip().upper()
-            elif token == 'ID':
-                if re.match(r'^[A-Za-z]+$', lexeme):
-                    token = 'ID'
-                else:
-                    token = 'ID'
             yield ('TOKEN: %s\t VAL: %s' % (token, lexeme))
         pos = val.end()
         val = get_token(code, pos)
@@ -84,14 +79,22 @@ def verify_tokens(file_name: str) -> bool:
     pos: int = 0
     val: Optional[Match[str]] = get_token(code, pos)
 
+    var_found = False  # Variable to check if 'var' keyword is used correctly
+
     while val is not None:
         token = val.lastgroup
 
         if token == 'UNKNOWN':
             return False
+        elif token == 'VAR':
+            var_found = True
 
         pos = val.end()
         val = get_token(code, pos)
+
+    # Check if 'var' keyword is used correctly
+    if var_found:
+        return re.search(r'\bvar\b', code) is not None
 
     return True
 
