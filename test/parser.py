@@ -1,5 +1,5 @@
 from typing import List
-from lexer import read_code, lexicon, verify_tokens
+from lexer import verify_tokens, get_tokens_code
 
 
 def analyze_code_with_verification(file_name, show_errors=True):
@@ -72,19 +72,25 @@ def parser(tokens: List[str]) -> dict:
     def FATOR():
         nonlocal token
 
-        if token == 'var':
-            match('var')
-            if token in ['int', 'real', 'str', 'bool']:
+        if token == 'VAR':
+            match('VAR')
+            if token in ['INT', 'REAL', 'STR', 'BOOL']:
                 match(token)
 
                 if token == 'ID':
                     match('ID')
 
-                    while token == 'COMMA':
+                    if token == 'COMMA':
                         match('COMMA')
 
                         if token == 'ID':
                             match('ID')
+                            if token == 'SEMICOLON':
+                                # print('veio da van')
+                                match('SEMICOLON')
+                            else:
+                                errors.append("Variable name expected after semicolon")
+                                return False
                         else:
                             errors.append("Variable name expected after comma")
                             return False
@@ -94,6 +100,9 @@ def parser(tokens: List[str]) -> dict:
                 errors.append(
                     "Expected one of ['int', 'real', 'str', 'bool'] after 'var' declaration")
                 return False
+            
+
+
         elif token in ['NUM', '(', ')']:
             match(token)
             return True
@@ -113,7 +122,8 @@ def parser(tokens: List[str]) -> dict:
 
 def process_code_file(file_name: str) -> None:
     if analyze_code_with_verification(file_name):
-        token_symbols = read_token_values(file_name)
+        token_symbols = get_tokens_code(file_name)
+        # print(token_symbols)
         result = parser(token_symbols)
         if result['success']:
             print("Análise sintática concluída. Gramática válida.")
@@ -122,6 +132,7 @@ def process_code_file(file_name: str) -> None:
             print("Erros encontrados:")
             for error in result['errors']:
                 print(f"- {error}")
+
     else:
         print("Erro: O código não está de acordo com a gramática especificada.")
 
