@@ -99,6 +99,20 @@ def verify_tokens(file_name: str) -> bool:
     return True
 
 
+def get_tokens_code(file_name: str) -> List[str]:
+    code = read_code(file_name)
+    tokens = []
+
+    for token in lexicon(code):
+        token_parts = token.split('\t')
+        if len(token_parts) >= 2:
+            token_name = token_parts[0].split(':')[1].strip()
+            tokens.append(token_name.split(':')[0].strip())
+    return tokens
+
+
+
 if __name__ == '__main__':
     analyze_code('codigo.txt')
+    # print(get_tokens_code('codigo.txt'))
     print(check_different_tokens := verify_tokens('codigo.txt'))
