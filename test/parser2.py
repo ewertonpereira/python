@@ -51,39 +51,25 @@ def parser(tokens: List[str]) -> dict:
             if TERM():
                 if EXPL():
                     return True
+            else:
+                return False
         return True
+
 
     def TERM():
         nonlocal token
         if FATOR():
-            if TERML():
-                return True
+            return True
         return False
 
-    def TERML():
-        nonlocal token
-        if token in ['*', '/']:
-            match(token)
-            if FATOR():
-                if TERML():
-                    return True
-        return True
-
-    def FATOR():
-        nonlocal token
-
-        cases = {
-            'VAR': check_var,
-            'while': check_while,
-            '(': lambda: match('('),
-            ')': lambda: match(')'),
-            # Adicione outros casos conforme necessário
-        }
-
-        while token in cases:
-            cases[token]()
-
-        return True
+    # def TERML():
+    #     nonlocal token
+    #     if token in ['*', '/']:
+    #         match(token)
+    #         if FATOR():
+    #             if TERML():
+    #                 return True
+    #     return True
 
     def check_var():
         match('VAR')
@@ -106,32 +92,69 @@ def parser(tokens: List[str]) -> dict:
                     else:
                         errors.append("Variable name expected after comma")
                         return False
-
+            print('Token atual:', token)
+            print('ok')
             return True
         else:
             errors.append(
                 "Expected one of ['int', 'real', 'str', 'bool'] after 'var' declaration")
             return False
         
-    def check_while():
-        match('WHILE')
-        if EXP():
-            if token == 'COLON':
-                print('aiaiaia')
-                match('COLON')
-                
-                while token != 'ENDWHILE':
-                    if not check_statement():
-                        return False
-                match('ENDWHILE')
-                return True
+
+    def check_id():
+        print('Token atual:', token)  # Adicione esta linha
+        match('ID')
+        if token == 'ATRIB':
+            match('ATRIB')
+
+            if token in ['INT', 'REAL', 'STR', 'BOOL', 'NUM']:
+                match(token)
+
+                if token == 'SEMICOLON':
+                    match('SEMICOLON')
+                else:
+                    errors.append("Variable name expected after semicolon")
+                    return False
             else:
-                errors.append("Missing colon after while condition")
-                return False
+                print('ooooo')
+            print('ok')
+            return True  # Adicione esta linha
         else:
-            errors.append("Invalid expression in while condition")
+            errors.append("Variable ATRIB")
             return False
 
+
+    def FATOR():
+        nonlocal token
+
+        cases = {
+            'VAR': check_var,
+            'ID': check_id,
+            # Adicione outros casos conforme necessário
+        }
+        if token in cases:
+            while token in cases:
+                cases[token]()
+            return True
+        else:
+            return False  
+
+
+    '''def check_while():
+        match('WHILE')
+        if token == 'COLON':
+            print('aiaiaia')
+            match('COLON')
+                
+            while token != 'ENDWHILE':
+                if not check_statement():
+                    return False
+            match('ENDWHILE')
+            return True
+        else:
+            errors.append("Missing colon after while condition")
+            return False
+        
 
     def check_statement():
         if token == 'ID':
@@ -145,7 +168,7 @@ def parser(tokens: List[str]) -> dict:
         else:
             errors.append("Invalid statement")
             return False
-
+'''
 
     try:
         if EXP() and token is None:
@@ -161,6 +184,7 @@ def process_code_file(file_name: str) -> None:
     if analyze_code_with_verification(file_name):
         token_symbols = get_tokens_code(file_name)
         result = parser(token_symbols)
+        # print(token_symbols)
         if result['success']:
             print("Análise sintática concluída. Gramática válida.")
         else:
