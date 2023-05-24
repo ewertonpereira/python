@@ -142,7 +142,7 @@ def process_code_file(file_name: str) -> None:
     if analyze_code_with_verification(file_name):
         token_symbols = get_tokens_code(file_name)
         result = parser(token_symbols)
-        print(token_symbols)
+        #print(token_symbols)
         if result['success']:
             print("Análise sintática concluída. Gramática válida.")
         else:
