@@ -65,7 +65,7 @@ def parser(tokens: List[str]) -> dict:
         match('VAR')
         if token in ['INT', 'REAL', 'STR', 'BOOL']:
             match(token)
-            print('var ok')
+            print('VAR ok')
             check_id()
             return True
         else:
@@ -75,23 +75,36 @@ def parser(tokens: List[str]) -> dict:
 
     def check_id():
         match('ID')
-        print('id ok')
+        print('ID ok')
         if token == 'COMMA':
             match(token)
             check_id()
 
-        if token == 'ATRIB':
+        elif token == 'ATRIB':
             match('ATRIB')
-            if token == 'NUM':
+            if token == 'ID' or token == 'NUM':
                 match(token)
-
                 check_semicolon()
             else:
-                errors.append(f'Variable name expected NUM {token}')
-        
-        if token in ['LT', 'GT', 'LTE', 'GTE', 'EQ']:
-            print('symbol ok')
+                errors.append(
+                    f'"ATRIB" expected a variable, but received {token}')
+
+        elif token in ['LT', 'GT', 'LTE', 'GTE', 'EQ']:
             match(token)
+            if token == 'ID' or token == 'NUM':
+                print('Relational expressions ok')
+                match(token)
+            else:
+                errors.append(f"Relational expressions expected a variable, but received {token}")
+            
+        elif token in ['ADD', 'SUB', 'MUL', 'DIV', 'POW']: 
+            match(token)
+            if token == 'ID' or token == 'NUM':
+                print('Arithmetic expressions ok')
+                match(token)
+                check_basic_arithmetic_expressions(token)
+            else:
+                errors.append(f"Arithmetic expressions expected a variable, but received {token}")
 
         if token == 'SEMICOLON':
             check_semicolon()
@@ -105,12 +118,60 @@ def parser(tokens: List[str]) -> dict:
     def check_semicolon():
         print('SEMICOLON ok')
         match('SEMICOLON')
+        print(token)
+
+
+    def check_basic_arithmetic_expressions(token):
+        if token in ['ADD', 'SUB', 'MUL', 'DIV']:
+            print('Expressões aritméticas ok')
+            match(token)
+        elif token == 'POW':
+            match('POW')
+        else:
+            return False
+
 
     def check_while():
         match('WHILE')
         print('WHILE ok')
         if token == 'LPAREN':
             match('LPAREN')
+            print('LPAREN ok')
+            if token == 'ID':
+                check_id()
+                print(token)
+                if token == 'RPAREN':
+                    match('RPAREN')
+                    print('RPAREN ok')
+
+                    if token == 'LBRACE':
+                        match('LBRACE')
+                        print('LBRACE ok')
+                        if token == 'ID':
+                            check_id()
+                            if token == 'RBRACE':
+                                print('RBRACE ok')
+                        else:
+                            errors.append(f'Expected "ID", but received {token}')
+
+                else:
+                    errors.append(
+                        f'Expected "ID" or "RPAREN", but received {token}')
+        else:
+            errors.append(f'Expected "LPAREN", but received {token}')
+
+    def check_if():
+        match('IF')
+        print('IF ok')
+        if token == 'LPAREN':
+            match('LPAREN')
+            check_id()
+            if token == 'RPAREN':
+                match('RPAREN')
+                if token == 'LBRACE':
+                    print('LBRACE ok')
+                    match('LBRACE')
+                    print('o inter é um lixo!', token)
 
     def FATOR():
         nonlocal token
@@ -119,8 +180,10 @@ def parser(tokens: List[str]) -> dict:
             'VAR': check_var,
             'ID': check_id,
             'WHILE': check_while,
+            'IF': check_if,
             # Adicione outros casos conforme necessário
         }
+
         if token in cases:
             while token in cases:
                 cases[token]()
@@ -142,7 +205,7 @@ def process_code_file(file_name: str) -> None:
     if analyze_code_with_verification(file_name):
         token_symbols = get_tokens_code(file_name)
         result = parser(token_symbols)
-        #print(token_symbols)
+        # print(token_symbols)
         if result['success']:
             print("Análise sintática concluída. Gramática válida.")
         else:
