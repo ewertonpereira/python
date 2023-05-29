@@ -19,6 +19,7 @@ spec: List[Tuple[str, str]] = [
     ('EQ', r'=='),
     ('NEQ', r'<>'),
     ('IF', r'if'),
+    ('ELSE', r'else'),
     ('VAR', r'var'),
     ('FOR', r'for'),
     ('WHILE', r'while'),
@@ -48,7 +49,7 @@ def lexicon(code: str) -> Generator[str, None, None]:
         token: Optional[str] = val.lastgroup
         lexeme: Optional[str] = val.group()
         if token != 'SKIP':
-            if token == 'ID' and lexeme.strip() in ['if', 'while', 'var', 'int', 'real', 'for', 'str', 'bool']:
+            if token == 'ID' and lexeme.strip() in ['if', 'else' 'while', 'var', 'int', 'real', 'for', 'str', 'bool']:
                 token = lexeme.strip().upper()
             yield ('TOKEN: %s\t VAL: %s' % (token, lexeme))
         pos = val.end()
