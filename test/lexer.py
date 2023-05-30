@@ -29,7 +29,6 @@ spec: List[Tuple[str, str]] = [
     ('RBRACE', r'\}'),
     ('COMMA', r','),
     ('SEMICOLON', r';'),
-    ('ELSE', r'else'),
     ('INT', r'int'),
     ('REAL', r'real'),
     ('STR', r'str'),
@@ -49,7 +48,7 @@ def lexicon(code: str) -> Generator[str, None, None]:
         token: Optional[str] = val.lastgroup
         lexeme: Optional[str] = val.group()
         if token != 'SKIP':
-            if token == 'ID' and lexeme.strip() in ['if', 'else' 'while', 'var', 'int', 'real', 'for', 'str', 'bool']:
+            if token == 'ID' and lexeme.strip() in ['if', 'else', 'while', 'var', 'int', 'real', 'for', 'str', 'bool']:
                 token = lexeme.strip().upper()
             yield ('TOKEN: %s\t VAL: %s' % (token, lexeme))
         pos = val.end()
@@ -80,8 +79,7 @@ def verify_tokens(file_name: str) -> bool:
     pos: int = 0
     val: Optional[Match[str]] = get_token(code, pos)
 
-    var_found = False  # Variable to check if 'var' keyword is used correctly
-
+    var_found = False
     while val is not None:
         token = val.lastgroup
 
@@ -93,7 +91,7 @@ def verify_tokens(file_name: str) -> bool:
         pos = val.end()
         val = get_token(code, pos)
 
-    # Check if 'var' keyword is used correctly
+
     if var_found:
         return re.search(r'\bvar\b', code) is not None
 
@@ -110,7 +108,6 @@ def get_tokens_code(file_name: str) -> List[str]:
             token_name = token_parts[0].split(':')[1].strip()
             tokens.append(token_name.split(':')[0].strip())
     return tokens
-
 
 
 if __name__ == '__main__':

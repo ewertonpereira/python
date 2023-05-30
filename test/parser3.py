@@ -84,7 +84,8 @@ def parser(tokens: List[str]) -> dict:
             match('ATRIB')
             if token == 'ID' or token == 'NUM':
                 match(token)
-                check_semicolon()
+                check_basic_arithmetic_expressions(token)
+                #check_semicolon()
             else:
                 errors.append(
                     f'"ATRIB" expected a variable, but received {token}')
@@ -102,7 +103,6 @@ def parser(tokens: List[str]) -> dict:
             if token == 'ID' or token == 'NUM':
                 print('Arithmetic expressions ok')
                 match(token)
-                check_basic_arithmetic_expressions(token)
             else:
                 errors.append(f"Arithmetic expressions expected a variable, but received {token}")
 
@@ -127,9 +127,9 @@ def parser(tokens: List[str]) -> dict:
             match(token)
         elif token == 'POW':
             match('POW')
-        else:
-            return False
-
+            if token == 'ID' or token == 'NUM':
+                check_basic_arithmetic_expressions()
+        
 
     def check_while():
         match('WHILE')
@@ -168,10 +168,23 @@ def parser(tokens: List[str]) -> dict:
             check_id()
             if token == 'RPAREN':
                 match('RPAREN')
+                print('RPAREN ok')
                 if token == 'LBRACE':
                     print('LBRACE ok')
                     match('LBRACE')
-                    print('o inter é um lixo!', token)
+                    
+                    check_id()
+                    check_id()
+                    if token == 'RBRACE':
+                        print('RBRACE ok')
+                        print('o guri chegou até aqui') ###################
+                else:
+                    errors.append(f'Expected "LBRACE", but received {token}')
+            else:
+                errors.append(f'Expected "RPAREN", but received {token}')
+        else:
+            errors.append(f'Expected "LPAREN", but received {token}')
+
 
     def FATOR():
         nonlocal token
