@@ -87,6 +87,10 @@ def parser(tokens: List[str]) -> dict:
                 match(token)
                 print(token) #
                 check_basic_arithmetic_expressions(token)
+                if token == 'NUM':
+                    check_num()
+
+                print('galinha assada')
                 print(token)
             else:
                 errors.append(
@@ -139,31 +143,35 @@ def parser(tokens: List[str]) -> dict:
                     if token == 'LBRACE':
                         match('LBRACE')
                         print('LBRACE ok')
-                        if token == 'ID':
-                            check_id()
-                            if token == 'IF':
-                                check_if()
-                                if token == 'ELSE':
-                                    check_else()
-            
-                            if token == 'RBRACE':
-                                print('RBRACE while ok')
+                        # if token == 'ID':
+                        #     check_id()
+                        #     if token == 'IF':
+                        #         check_if()
+                        #         if token == 'ELSE':
+                        #             check_else()
+                        #             if token == 'ID':
+                        #                 print('bola amarela')
+
+                    
+                    if token == 'RBRACE':
+                        print('RBRACE while ok')
+
                 else:
                     errors.append(f'Expected "ID" or "RPAREN", but received {token}')
 
-            if token == 'NUM':
-                check_num()
-                # print(token)
-                if token == 'IF':
-                    check_if()
-                    if token == 'ELSE':
-                        check_else()
+            # if token == 'NUM':
+            #     check_num()
+            #     print(token)
+            #     if token == 'IF':
+            #         check_if()
+            #         if token == 'ELSE':
+            #             check_else()
             
-                        if token == 'RBRACE':
-                            print('RBRACE while ok')
+            #             if token == 'RBRACE':
+            #                 print('RBRACE while ok')
                             
-            else:
-                errors.append(f'Expected "ID or NUM", but received {token}')
+            # else:
+            #     errors.append(f'Expected "boi or NUM", but received {token}')
 
         
         else:
@@ -207,7 +215,7 @@ def parser(tokens: List[str]) -> dict:
             check_id()
             if token == 'RBRACE':
                 print('RBRACE else ok')
-                match('RBRACE') 
+                match('RBRACE')
             else:
                 errors.append(f'Expected "RBRACE", but received {token}')
         else:
@@ -226,6 +234,9 @@ def parser(tokens: List[str]) -> dict:
         if token in ['ADD', 'SUB', 'MUL', 'DIV']:
             print('Expressões aritméticas ok')
             match(token)
+            if token == 'ID' or token == 'NUM':
+                print('agora bombou maaaaané')
+                match(token)
         elif token == 'POW':
             match('POW')
             if token == 'ID' or token == 'NUM':
