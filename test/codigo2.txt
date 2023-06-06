@@ -1,0 +1,10 @@
+while (cont < 10) {
+    cont2 = 3.1415 * cont ^ 2;
+    if (cont < 5) {
+        num = num + cont2;
+    }
+    else {
+        cont = 0;
+    }
+    cont = cont + 1;
+}
