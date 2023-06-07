@@ -18,6 +18,7 @@ def parser(tokens: List[str]):
     token = tokens[token_index]
     errors = []
 
+
     def match(expected_token):
         nonlocal token, token_index
         if token == expected_token:
@@ -27,8 +28,8 @@ def parser(tokens: List[str]):
             else:
                 token = None
         else:
-            raise SyntaxError(
-                f"Expected '{expected_token}', but found '{token}'")
+            errors.append(f"Expected '{expected_token}', but found '{token}'")
+
 
     def analyze_list(token):
         actions = {
@@ -43,13 +44,13 @@ def parser(tokens: List[str]):
         else:
             print('Item desconhecido:', token)
 
+
     def check_id():
         match('ID')
         print('ID ok')
         if token == 'COMMA':
             match(token)
             check_id()
-
         elif token == 'ATRIB':
             match('ATRIB')
             print('ATRIB ok')
@@ -59,45 +60,36 @@ def parser(tokens: List[str]):
                 check_basic_arithmetic_expressions(token)
                 if token == 'NUM':
                     check_num()
-
-                print('galinha assada')  # tirar
                 if token == 'ID':
                     check_id()
             else:
-                errors.append(
-                    f'"ATRIB" expected a variable, but received {token}')
-
+                errors.append(f'"ATRIB" expected a variable, but received {token}')
         elif token in ['LT', 'GT', 'LTE', 'GTE', 'EQ']:
             match(token)
             if token == 'ID' or token == 'NUM':
                 print('Relational expressions ok')
                 match(token)
             else:
-                errors.append(
-                    f"Relational expressions expected a variable, but received {token}")
-
+                errors.append(f"Relational expressions expected a variable, but received {token}")
         elif token in ['ADD', 'SUB', 'MUL', 'DIV', 'POW']:
             match(token)
             if token == 'ID' or token == 'NUM':
                 print('Arithmetic expressions ok')
                 match(token)
             else:
-                errors.append(
-                    f"Arithmetic expressions expected a variable, but received {token}")
+                errors.append(f"Arithmetic expressions expected a variable, but received {token}")
 
         if token == 'SEMICOLON':
             check_semicolon()
-
             print('Token atual:', token)
             return True
-        else:
-            errors.append(f"Variable COMMA or ATRIB {token}")
-            return False
+        
 
     def check_semicolon():
         print('SEMICOLON ok')
         match('SEMICOLON')
         print(token)
+
 
     def check_while():
         match('WHILE')
@@ -111,7 +103,6 @@ def parser(tokens: List[str]):
                 if token == 'RPAREN':
                     match('RPAREN')
                     print('RPAREN ok')
-
                     if token == 'LBRACE':
                         match('LBRACE')
                         print('LBRACE ok')
@@ -119,17 +110,17 @@ def parser(tokens: List[str]):
                             check_id()
                             if token == 'IF':
                                 check_if()
+                                analyze_list(token)
                                 if token == 'ELSE':
                                     check_else()
-                                print('opa', token)
                                 analyze_list(token)
-
                         if token == 'RBRACE':
                             print('RBRACE while ok')
-
                 else:
-                    errors.append(
-                        f'Expected "ID" or "RPAREN", but received {token}')
+                    errors.append(f'Expected "ID" or "RPAREN 1", but received {token}')
+            else:
+                errors.append(f'Expected "ID" or "RPAREN" 2, but received {token}')
+
 
     def check_if():
         match('IF')
@@ -150,14 +141,14 @@ def parser(tokens: List[str]):
                         match('RBRACE')
                         print(token)
                     else:
-                        errors.append(
-                            f'Expected "RBRACE", but received {token}')
+                        errors.append(f'Expected "RBRACE", but received {token}')
                 else:
                     errors.append(f'Expected "LBRACE", but received {token}')
             else:
                 errors.append(f'Expected "RPAREN", but received {token}')
         else:
             errors.append(f'Expected "LPAREN", but received {token}')
+
 
     def check_else():
         match('ELSE')
@@ -174,13 +165,14 @@ def parser(tokens: List[str]):
         else:
             errors.append(f'Expected "LBRACE", but received {token}')
 
+
     def check_num():
         match('NUM')
         print('NUM ok')
         check_basic_arithmetic_expressions(token)
-
         check_relational_expressions(token)
         print(token)
+
 
     def check_basic_arithmetic_expressions(token):
         if token in ['ADD', 'SUB', 'MUL', 'DIV']:
@@ -191,23 +183,35 @@ def parser(tokens: List[str]):
             if token == 'ID' or token == 'NUM':
                 check_basic_arithmetic_expressions(token)
 
+
     def check_relational_expressions(token):
         if token in ['LT', 'GT', 'LTE', 'GTE', 'EQ']:
             print('Relational expressions ok')
             match(token)
+
 
     print(token)
     if token == 'WHILE':
         check_while()
 
     print('aqui', token)
+    return errors
+
+
+def analyze_code(file_name):
+    if analyze_code_with_verification(file_name):
+        token_symbols = get_tokens_code(file_name)
+        errors = parser(token_symbols)
+        if not errors:
+            print("Análise sintática bem-sucedida!")
+        else:
+            print("Erros encontrados durante a análise sintática:")
+            for error in errors:
+                print(error)
 
 
 def process_code_file(file_name: str) -> None:
-    if analyze_code_with_verification(file_name):
-        token_symbols = get_tokens_code(file_name)
-        result = parser(token_symbols)
-        print(token_symbols)
+    analyze_code(file_name)
 
 
 process_code_file('codigo2.txt')
