@@ -17,7 +17,7 @@ def parser(tokens: List[str]):
     token_count = len(tokens)
     token = tokens[token_index]
     errors = []
-
+    
     def match(expected_token):
         nonlocal token, token_index
         if token == expected_token:
@@ -36,19 +36,20 @@ def parser(tokens: List[str]):
             'ID': check_id,
             'WHILE': check_while,
             'IF': check_if,
-            'ELSE': check_else
+            'ELSE': check_else,
         }
 
         if token in actions:
             actions[token]()
         else:
             errors.append(f'Variável inválida: {token}')
+        
 
     def check_id():
         match('ID')
         print('ID ok')
         if token == 'COMMA':
-            match(token)
+            match('COMMA')
             check_id()
         elif token == 'ATRIB':
             match('ATRIB')
@@ -80,20 +81,30 @@ def parser(tokens: List[str]):
             else:
                 errors.append(
                     f"Arithmetic expressions expected a variable, but received {token}")
-
+        elif token in ['ATRIB_ADD', 'ATRIB_SUB']:
+            print('combined assignment operator ok')
+            match(token)
+            if token == 'ID':
+                check_id()
+            elif token == 'NUM':
+                check_num()
         if token == 'SEMICOLON':
             check_semicolon()
             return True
         else:
             return False
+            
+
 
     def check_semicolon():
         print('SEMICOLON ok')
         if token_index + 1 < token_count:
             match('SEMICOLON')
-        print(token)
-
-
+        else:
+            print('Fim do código')
+            
+            
+        
     def check_while():
         match('WHILE')
         print('WHILE ok')
@@ -208,7 +219,7 @@ def parser(tokens: List[str]):
             check_id()
 
     while token_index < token_count:
-        if token is None:
+        if token == 'SEMICOLON':
             break
         elif token == 'ID':
             check_id()
@@ -222,22 +233,26 @@ def parser(tokens: List[str]):
             check_while()
         else:
             errors.append(f"Invalid token: {token}")
+        
+    print('aqui', token)
     
-
     return errors
 
 
 def analyze_code(file_name: str):
     if analyze_code_with_verification(file_name):
         token_symbols = get_tokens_code(file_name)
-        print(token_symbols)
+        #print(token_symbols)
         errors = parser(token_symbols)
         if not errors:
-            return "Análise sintática bem-sucedida!"
+            success_message = "Análise sintática bem-sucedida!"
+            return success_message, errors
         else:
-            print("Erros encontrados durante a análise sintática:")
-            for error in errors:
-                print(error)
+            error_message = "Erros encontrados durante a análise sintática:"
+            return error_message, errors
+    else:
+        verification_error_message = "Erro na verificação dos tokens. Verifique o arquivo selecionado e tente novamente."
+        return verification_error_message, []
 
 
 analyze_code('codigo2.txt')

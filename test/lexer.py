@@ -35,7 +35,7 @@ spec: List[Tuple[str, str]] = [
     ('REAL', r'real'),
     ('STR', r'str'),
     ('BOOL', r'bool'),
-    ('UNKNOWN', r'.'),
+    ('UNKNOWN', r'[^ \n\t]+'),
 ]
 
 
@@ -61,9 +61,6 @@ def lexicon(code: str) -> Generator[str, None, None]:
             yield ('TOKEN: %s\t VAL: %s' % (token, lexeme))
         pos = val.end() if val is not None else pos + 1
         val = get_token(code, pos)
-
-
-
 
 
 def read_code(file_name: str) -> str:
