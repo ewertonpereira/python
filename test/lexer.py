@@ -5,7 +5,9 @@ from typing import Generator, List, Tuple, Callable, Optional, Match
 spec: List[Tuple[str, str]] = [
     ('NUM', r'\d+(?:[\.,]\d+)?'),
     ('ID', r'[A-Za-z]+\d*'),
-    ('ATRIB', r'[=]'),
+    ('ATRIB_ADD', r'\+='),
+    ('ATRIB_SUB', r'-='),
+    ('ATRIB', r'='),
     ('SKIP', r'[ \n\t]'),
     ('ADD', r'[+]'),
     ('SUB', r'[-]'),
@@ -50,9 +52,18 @@ def lexicon(code: str) -> Generator[str, None, None]:
         if token != 'SKIP':
             if token == 'ID' and lexeme.strip() in ['if', 'else', 'while', 'var', 'int', 'real', 'for', 'str', 'bool']:
                 token = lexeme.strip().upper()
+            elif token == 'ATRIB':
+                next_char = code[val.end():val.end() + 1]
+                if next_char == '+':
+                    token = 'ATRIB_ADD'
+                elif next_char == '-':
+                    token = 'ATRIB_SUB'
             yield ('TOKEN: %s\t VAL: %s' % (token, lexeme))
-        pos = val.end()
+        pos = val.end() if val is not None else pos + 1
         val = get_token(code, pos)
+
+
+
 
 
 def read_code(file_name: str) -> str:
