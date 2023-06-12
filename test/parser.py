@@ -82,6 +82,8 @@ def parser(tokens: List[str]):
                     match(token)
                 else:
                     errors.append(f"Arithmetic expressions expected a variable, but received {token}")
+            elif token == 'RPAREN':
+                check_arithmetic_expressions()
             elif token in ['ATRIB_ADD', 'ATRIB_SUB']:
                 matchs.append('combined assignment operator ok')
                 match(token)
@@ -201,10 +203,38 @@ def parser(tokens: List[str]):
         if token in ['ADD', 'SUB', 'MUL', 'DIV']:
             match(token)
             matchs.append('Expressões aritméticas ok')
+            print('Expressões aritméticas ok') ###########
         elif token == 'POW':
             match('POW')
             if token == 'ID' or token == 'NUM':
                 check_basic_arithmetic_expressions(token)
+
+    ##################################
+    def check_arithmetic_expressions():
+        if token == 'LPAREN':
+            match('LPAREN')
+            print('LPAREN ok')
+            check_arithmetic_expressions()
+            if token == 'RPAREN':
+                match('RPAREN')
+                print('RPAREN CLOSED ok')
+                if token_index + 1 < token_count:
+                    check_basic_arithmetic_expressions(token)
+                    check_arithmetic_expressions()
+            else:
+                errors.append(f'Expected "RPAREN", but received {token}')
+        elif token == 'NUM':
+            print('NUM ok')
+            match('NUM')
+            print(token)
+            check_basic_arithmetic_expressions(token)
+            print(token)
+            check_arithmetic_expressions()
+        elif token == 'ID':
+            check_id()
+        elif token == 'LPAREN':
+            print('LPAREN ok')
+            
 
 
     def check_relational_expressions(token):
@@ -241,6 +271,8 @@ def parser(tokens: List[str]):
             check_else()
         elif token == 'WHILE':
             check_while()
+        elif token == 'LPAREN':
+            check_arithmetic_expressions()
         else:
             errors.append(f"Invalid token: {token}")
         
@@ -252,6 +284,7 @@ def parser(tokens: List[str]):
 def analyze_code(file_name: str):
     if analyze_code_with_verification(file_name):
         token_symbols = get_tokens_code(file_name)
+        print(token_symbols)
         errors = parser(token_symbols)
         if not errors:
             success_message = "Análise sintática bem-sucedida!"
