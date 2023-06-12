@@ -17,6 +17,7 @@ def parser(tokens: List[str]):
     token_count = len(tokens)
     token = tokens[token_index]
     errors = []
+    matchs = []
     
     def match(expected_token):
         nonlocal token, token_index
@@ -37,6 +38,7 @@ def parser(tokens: List[str]):
             'WHILE': check_while,
             'IF': check_if,
             'ELSE': check_else,
+            'RBRACE': lambda: token,
         }
 
         if token in actions:
@@ -46,80 +48,79 @@ def parser(tokens: List[str]):
         
 
     def check_id():
-        match('ID')
-        print('ID ok')
-        if token == 'COMMA':
-            match('COMMA')
-            check_id()
-        elif token == 'ATRIB':
-            match('ATRIB')
-            print('ATRIB ok')
-            if token == 'ID' or token == 'NUM':
+        if token == 'ID':
+            match('ID')
+            matchs.append('ID ok')
+            if token == 'COMMA':
+                match('COMMA')
+                check_id()
+            elif token == 'ATRIB':
+                match('ATRIB')
+                matchs.append('ATRIB ok')
+                if token == 'ID' or token == 'NUM':
+                    match(token)
+                    check_basic_arithmetic_expressions(token)
+                    if token == 'NUM':
+                        check_num()
+                    if token == 'ID':
+                        check_id()
+                else:
+                    errors.append(f'"ATRIB" expected a variable, but received {token}')
+            elif token in ['LT', 'GT', 'LTE', 'GTE', 'EQ']:
                 match(token)
-                print(token)
-                check_basic_arithmetic_expressions(token)
-                if token == 'NUM':
-                    check_num()
+                if token == 'ID' or token == 'NUM':
+                    matchs.append('Relational expressions ok')
+                    match(token)
+                else:
+                    errors.append(f"Relational expressions expected a variable, but received {token}")
+                    print(errors)
+                    exit()
+                    
+            elif token in ['ADD', 'SUB', 'MUL', 'DIV', 'POW']:
+                match(token)
+                if token == 'ID' or token == 'NUM':
+                    matchs.append('Arithmetic expressions ok')
+                    match(token)
+                else:
+                    errors.append(f"Arithmetic expressions expected a variable, but received {token}")
+            elif token in ['ATRIB_ADD', 'ATRIB_SUB']:
+                matchs.append('combined assignment operator ok')
+                match(token)
                 if token == 'ID':
                     check_id()
+                elif token == 'NUM':
+                    check_num()
+            if token == 'SEMICOLON':
+                check_semicolon()
+                return True
             else:
-                errors.append(
-                    f'"ATRIB" expected a variable, but received {token}')
-        elif token in ['LT', 'GT', 'LTE', 'GTE', 'EQ']:
-            match(token)
-            if token == 'ID' or token == 'NUM':
-                print('Relational expressions ok')
-                match(token)
-            else:
-                errors.append(
-                    f"Relational expressions expected a variable, but received {token}")
-        elif token in ['ADD', 'SUB', 'MUL', 'DIV', 'POW']:
-            match(token)
-            if token == 'ID' or token == 'NUM':
-                print('Arithmetic expressions ok')
-                match(token)
-            else:
-                errors.append(
-                    f"Arithmetic expressions expected a variable, but received {token}")
-        elif token in ['ATRIB_ADD', 'ATRIB_SUB']:
-            print('combined assignment operator ok')
-            match(token)
-            if token == 'ID':
-                check_id()
-            elif token == 'NUM':
-                check_num()
-        if token == 'SEMICOLON':
-            check_semicolon()
-            return True
+                return False
         else:
-            return False
+            errors.append(f'Expected "ID", but received {token}')
+
             
-
-
     def check_semicolon():
-        print('SEMICOLON ok')
+        matchs.append('SEMICOLON ok')
         if token_index + 1 < token_count:
             match('SEMICOLON')
         else:
             print('Fim do código')
             
             
-        
     def check_while():
         match('WHILE')
-        print('WHILE ok')
+        matchs.append('WHILE ok')
         if token == 'LPAREN':
             match('LPAREN')
-            print('LPAREN ok')
+            matchs.append('LPAREN ok')
             if token == 'ID':
                 check_id()
-                print(token)
                 if token == 'RPAREN':
                     match('RPAREN')
-                    print('RPAREN ok')
+                    matchs.append('RPAREN ok')
                     if token == 'LBRACE':
                         match('LBRACE')
-                        print('LBRACE ok')
+                        matchs.append('LBRACE ok')
                         if token == 'ID':
                             check_id()
                             if token == 'IF':
@@ -129,7 +130,7 @@ def parser(tokens: List[str]):
                                     check_else()
                                 analyze_list(token)
                         if token == 'RBRACE':
-                            print('RBRACE while ok')
+                            matchs.append('RBRACE WHILE ok')
                             if token_index + 1 < token_count:
                                 match('RBRACE')
                             analyze_list(token)
@@ -144,25 +145,23 @@ def parser(tokens: List[str]):
 
     def check_if():
         match('IF')
-        print('IF ok')
+        matchs.append('IF ok')
         if token == 'LPAREN':
             match('LPAREN')
-            print('LPAREN ok')
+            matchs.append('LPAREN ok')
             check_id()
             if token == 'RPAREN':
                 match('RPAREN')
-                print('RPAREN ok')
+                matchs.append('RPAREN ok')
                 if token == 'LBRACE':
-                    print('LBRACE ok')
+                    matchs.append('LBRACE ok')
                     match('LBRACE')
                     check_id()
                     if token == 'RBRACE':
-                        print('RBRACE if ok')
+                        matchs.append('RBRACE IF ok')
                         if token_index + 1 < token_count:
                             match('RBRACE')
                             analyze_list(token)
-                        print(token)
-
                     else:
                         errors.append(
                             f'Expected "RBRACE", but received {token}')
@@ -175,13 +174,13 @@ def parser(tokens: List[str]):
 
     def check_else():
         match('ELSE')
-        print('ELSE ok')
+        matchs.append('ELSE ok')
         if token == 'LBRACE':
-            print('LBRACE ok')
+            matchs.append('LBRACE ok')
             match('LBRACE')
             check_id()
             if token == 'RBRACE':
-                print('RBRACE else ok')
+                matchs.append('RBRACE ELSE ok')
                 if token_index + 1 < token_count:
                     match('RBRACE')
                     analyze_list(token)
@@ -192,15 +191,15 @@ def parser(tokens: List[str]):
 
     def check_num():
         match('NUM')
-        print('NUM ok')
+        matchs.append('NUM ok')
         check_basic_arithmetic_expressions(token)
         check_relational_expressions(token)
-        print(token)
+
 
     def check_basic_arithmetic_expressions(token):
         if token in ['ADD', 'SUB', 'MUL', 'DIV']:
             match(token)
-            print('Expressões aritméticas ok')
+            matchs.append('Expressões aritméticas ok')
         elif token == 'POW':
             match('POW')
             if token == 'ID' or token == 'NUM':
@@ -208,15 +207,23 @@ def parser(tokens: List[str]):
 
     def check_relational_expressions(token):
         if token in ['LT', 'GT', 'LTE', 'GTE', 'EQ']:
-            print('Relational expressions ok')
+            matchs.append('Relational expressions ok')
             match(token)
 
     def check_var():
         match('VAR')
-        print('VAR ok')
+        matchs.append('VAR ok')
         if token in ['INT', 'STR', 'REAL', 'BOOL']:
             match(token)
             check_id()
+
+
+    def show_list_checks():
+        print('========== CHECK IN ===========')
+        for item in matchs:
+            print(item)
+        print('========= CHECK OUT ===========')
+
 
     while token_index < token_count:
         if token == 'SEMICOLON':
@@ -234,25 +241,24 @@ def parser(tokens: List[str]):
         else:
             errors.append(f"Invalid token: {token}")
         
-    print('aqui', token)
-    
+
+    # show_list_checks()
     return errors
 
 
 def analyze_code(file_name: str):
     if analyze_code_with_verification(file_name):
         token_symbols = get_tokens_code(file_name)
-        #print(token_symbols)
         errors = parser(token_symbols)
         if not errors:
             success_message = "Análise sintática bem-sucedida!"
-            return success_message, errors
+            return print(success_message)
         else:
             error_message = "Erros encontrados durante a análise sintática:"
-            return error_message, errors
+            return print(error_message, errors)
     else:
         verification_error_message = "Erro na verificação dos tokens. Verifique o arquivo selecionado e tente novamente."
-        return verification_error_message, []
+        return print(verification_error_message, [])
 
 
 analyze_code('codigo2.txt')
