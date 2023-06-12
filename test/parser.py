@@ -74,8 +74,7 @@ def parser(tokens: List[str]):
                 else:
                     errors.append(f"Relational expressions expected a variable, but received {token}")
                     print(errors)
-                    exit()
-                    
+                    exit()      
             elif token in ['ADD', 'SUB', 'MUL', 'DIV', 'POW']:
                 match(token)
                 if token == 'ID' or token == 'NUM':
@@ -133,8 +132,7 @@ def parser(tokens: List[str]):
                             matchs.append('RBRACE WHILE ok')
                             if token_index + 1 < token_count:
                                 match('RBRACE')
-                            analyze_list(token)
-                            
+                            analyze_list(token)                          
                 else:
                     errors.append(
                         f'Expected "ID" or "RPAREN 1", but received {token}')
@@ -142,6 +140,7 @@ def parser(tokens: List[str]):
                 errors.append(
                     f'Expected "ID" or "RPAREN" 2, but received {token}')
         return True
+
 
     def check_if():
         match('IF')
@@ -158,7 +157,7 @@ def parser(tokens: List[str]):
                     match('LBRACE')
                     check_id()
                     if token == 'RBRACE':
-                        matchs.append('RBRACE IF ok')
+                        matchs.append('RBRACE  ok')
                         if token_index + 1 < token_count:
                             match('RBRACE')
                             analyze_list(token)
@@ -172,12 +171,13 @@ def parser(tokens: List[str]):
         else:
             errors.append(f'Expected "LPAREN", but received {token}')
 
+
     def check_else():
         match('ELSE')
         matchs.append('ELSE ok')
         if token == 'LBRACE':
-            matchs.append('LBRACE ok')
             match('LBRACE')
+            matchs.append('LBRACE ok')
             check_id()
             if token == 'RBRACE':
                 matchs.append('RBRACE ELSE ok')
@@ -189,12 +189,13 @@ def parser(tokens: List[str]):
         else:
             errors.append(f'Expected "LBRACE", but received {token}')
 
+
     def check_num():
         match('NUM')
         matchs.append('NUM ok')
         check_basic_arithmetic_expressions(token)
         check_relational_expressions(token)
-
+        
 
     def check_basic_arithmetic_expressions(token):
         if token in ['ADD', 'SUB', 'MUL', 'DIV']:
@@ -205,10 +206,12 @@ def parser(tokens: List[str]):
             if token == 'ID' or token == 'NUM':
                 check_basic_arithmetic_expressions(token)
 
+
     def check_relational_expressions(token):
         if token in ['LT', 'GT', 'LTE', 'GTE', 'EQ']:
             matchs.append('Relational expressions ok')
             match(token)
+
 
     def check_var():
         match('VAR')
@@ -242,7 +245,7 @@ def parser(tokens: List[str]):
             errors.append(f"Invalid token: {token}")
         
 
-    # show_list_checks()
+    show_list_checks()
     return errors
 
 
