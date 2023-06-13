@@ -1,8 +1,14 @@
 from typing import List
 from lexer import verify_tokens, get_tokens_code
+from os import system
+import time
 
 
-def analyze_code_with_verification(file_name, show_errors=True):
+def clear(): 
+    return system('cls')
+
+
+def analyze_code_with_verification(file_name: str, show_errors: bool = True) -> bool:
     if verify_tokens(file_name):
         print("Verificação de tokens bem-sucedida.\nComeçaremos o processo de análise sintática. Por favor, aguarde...")
         return True
@@ -12,14 +18,15 @@ def analyze_code_with_verification(file_name, show_errors=True):
         return False
 
 
-def parser(tokens: List[str]):
-    token_index = 0
-    token_count = len(tokens)
-    token = tokens[token_index]
-    errors = []
-    matchs = []
+def parser(tokens: List[str]) -> None:
+    token_index: int = 0
+    token_count: int = len(tokens)
+    token: str = tokens[token_index]
+    errors: List[str] = []
+    matchs: List[str] = []
+
     
-    def match(expected_token):
+    def match(expected_token: str) -> None:
         nonlocal token, token_index
         if token == expected_token:
             token_index += 1
@@ -31,7 +38,7 @@ def parser(tokens: List[str]):
             errors.append(f"Expected '{expected_token}', but found '{token}'")
             
 
-    def analyze_list(token):
+    def analyze_list(token: str) -> None:
         actions = {
             'VAR': check_var,
             'ID': check_id,
@@ -47,7 +54,7 @@ def parser(tokens: List[str]):
             errors.append(f'Variável inválida: {token}')
         
 
-    def check_id():
+    def check_id() -> bool:
         if token == 'ID':
             match('ID')
             matchs.append('ID ok')
@@ -57,7 +64,9 @@ def parser(tokens: List[str]):
             elif token == 'ATRIB':
                 match('ATRIB')
                 matchs.append('ATRIB ok')
-                if token == 'ID' or token == 'NUM':
+                if token == 'LPAREN':
+                    check_arithmetic_expressions()
+                elif token == 'ID' or token == 'NUM':
                     match(token)
                     check_basic_arithmetic_expressions(token)
                     if token == 'NUM':
@@ -98,9 +107,10 @@ def parser(tokens: List[str]):
                 return False
         else:
             errors.append(f'Expected "ID", but received {token}')
+            
 
             
-    def check_semicolon():
+    def check_semicolon() -> None:
         matchs.append('SEMICOLON ok')
         if token_index + 1 < token_count:
             match('SEMICOLON')
@@ -108,7 +118,7 @@ def parser(tokens: List[str]):
             print('Fim do código')
             
             
-    def check_while():
+    def check_while() -> bool:
         match('WHILE')
         matchs.append('WHILE ok')
         if token == 'LPAREN':
@@ -144,7 +154,7 @@ def parser(tokens: List[str]):
         return True
 
 
-    def check_if():
+    def check_if() -> None:
         match('IF')
         matchs.append('IF ok')
         if token == 'LPAREN':
@@ -174,7 +184,7 @@ def parser(tokens: List[str]):
             errors.append(f'Expected "LPAREN", but received {token}')
 
 
-    def check_else():
+    def check_else() -> None:
         match('ELSE')
         matchs.append('ELSE ok')
         if token == 'LBRACE':
@@ -192,58 +202,54 @@ def parser(tokens: List[str]):
             errors.append(f'Expected "LBRACE", but received {token}')
 
 
-    def check_num():
+    def check_num() -> None:
         match('NUM')
         matchs.append('NUM ok')
         check_basic_arithmetic_expressions(token)
         check_relational_expressions(token)
         
 
-    def check_basic_arithmetic_expressions(token):
+    def check_basic_arithmetic_expressions(token: str) -> None:
         if token in ['ADD', 'SUB', 'MUL', 'DIV']:
             match(token)
             matchs.append('Expressões aritméticas ok')
-            print('Expressões aritméticas ok') ###########
         elif token == 'POW':
             match('POW')
             if token == 'ID' or token == 'NUM':
                 check_basic_arithmetic_expressions(token)
 
-    ##################################
-    def check_arithmetic_expressions():
+    
+    def check_arithmetic_expressions() -> None:
         if token == 'LPAREN':
             match('LPAREN')
-            print('LPAREN ok')
+            matchs.append('LPAREN ok')
             check_arithmetic_expressions()
             if token == 'RPAREN':
                 match('RPAREN')
-                print('RPAREN CLOSED ok')
+                matchs.append('RPAREN CLOSED ok')
                 if token_index + 1 < token_count:
                     check_basic_arithmetic_expressions(token)
                     check_arithmetic_expressions()
             else:
                 errors.append(f'Expected "RPAREN", but received {token}')
         elif token == 'NUM':
-            print('NUM ok')
+            matchs.append('NUM ok')
             match('NUM')
-            print(token)
             check_basic_arithmetic_expressions(token)
-            print(token)
             check_arithmetic_expressions()
         elif token == 'ID':
             check_id()
         elif token == 'LPAREN':
-            print('LPAREN ok')
-            
+            matchs.append('LPAREN ok')
 
 
-    def check_relational_expressions(token):
+    def check_relational_expressions(token: str) -> None:
         if token in ['LT', 'GT', 'LTE', 'GTE', 'EQ']:
             matchs.append('Relational expressions ok')
             match(token)
 
 
-    def check_var():
+    def check_var() -> None:
         match('VAR')
         matchs.append('VAR ok')
         if token in ['INT', 'STR', 'REAL', 'BOOL']:
@@ -251,11 +257,11 @@ def parser(tokens: List[str]):
             check_id()
 
 
-    def show_list_checks():
-        print('========== CHECK IN ===========')
+    def show_list_checks() -> None:
+        print('========== START ==========')
         for item in matchs:
             print(item)
-        print('========= CHECK OUT ===========')
+        print('=========== END ===========')
 
 
     while token_index < token_count:
@@ -271,26 +277,31 @@ def parser(tokens: List[str]):
             check_else()
         elif token == 'WHILE':
             check_while()
-        elif token == 'LPAREN':
-            check_arithmetic_expressions()
+        elif token not in ['VAR', 'ID', 'IF', 'WHILE']:
+            if not matchs:
+                errors.append(f"This token can not start a sentence: {token}")
+            break
         else:
             errors.append(f"Invalid token: {token}")
         
 
-    show_list_checks()
+    if matchs:
+        show_list_checks()
+
     return errors
 
 
-def analyze_code(file_name: str):
+def analyze_code(file_name: str) -> None:
+    clear()
     if analyze_code_with_verification(file_name):
         token_symbols = get_tokens_code(file_name)
-        print(token_symbols)
+        # print(token_symbols)
         errors = parser(token_symbols)
         if not errors:
             success_message = "Análise sintática bem-sucedida!"
             return print(success_message)
         else:
-            error_message = "Erros encontrados durante a análise sintática:"
+            error_message = "\nErros encontrados durante a análise sintática:"
             return print(error_message, errors)
     else:
         verification_error_message = "Erro na verificação dos tokens. Verifique o arquivo selecionado e tente novamente."
