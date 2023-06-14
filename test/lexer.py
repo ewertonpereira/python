@@ -72,9 +72,13 @@ def read_code(file_name: str) -> str:
 
 def analyze_code(file_name: str) -> None:
     code = read_code(file_name)
+    tokens = []
 
     for token in lexicon(code):
         print(token)
+        tokens.append(token)
+
+    return tokens
 
 
 def verify_tokens(file_name: str) -> bool:
@@ -118,7 +122,54 @@ def get_tokens_code(file_name: str) -> List[str]:
     return tokens
 
 
+def lexicon_from_file(file_name: str) -> Generator[dict, None, None]:
+    with open(file_name, 'r') as file:
+        code = file.read()
+
+    # Compile the regular expression once
+    regex = re.compile('|'.join('(?P<%s>%s)' % pair for pair in spec))
+
+    special_tokens = {
+    'if': 'IF',
+    'else': 'ELSE',
+    'while': 'WHILE',
+    'var': 'VAR',
+    'int': 'INT',
+    'real': 'REAL',
+    'for': 'FOR',
+    'str': 'STR',
+    'bool': 'BOOL'
+    }
+
+    pos: int = 0
+    val: Optional[Match[str]] = regex.match(code, pos)
+
+    while val is not None:
+        token: Optional[str] = val.lastgroup
+        lexeme: Optional[str] = val.group()
+        if token != 'SKIP':
+            if token == 'ID':
+                stripped_lexeme = lexeme.strip()
+                if stripped_lexeme in special_tokens:
+                    token = special_tokens[stripped_lexeme].upper()
+            elif token == 'ATRIB':
+                next_char = code[val.end():val.end() + 1]
+                if next_char == '+':
+                    token = 'ATRIB_ADD'
+                elif next_char == '-':
+                    token = 'ATRIB_SUB'
+            yield {'TOKEN': token, 'VAL': lexeme}
+        pos = val.end() if val is not None else pos + 1
+        val = regex.match(code, pos)
+
+
 if __name__ == '__main__':
-    analyze_code('codigo.txt')
+    # analyze_code('codigo.txt')
     # print(get_tokens_code('codigo.txt'))
     print(check_different_tokens := verify_tokens('codigo.txt'))
+
+    tokens = list(lexicon_from_file('codigo.txt'))
+    # print(tokens)
+
+    # for token in tokens:
+    #     print(f"{token['TOKEN']}: {token['VAL']}")
