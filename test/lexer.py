@@ -70,7 +70,7 @@ def read_code(file_name: str) -> str:
     return code
 
 
-def analyze_code(file_name: str) -> None:
+def analyze_code(file_name: str):
     code = read_code(file_name)
     tokens = []
 
@@ -158,7 +158,7 @@ def lexicon_from_file(file_name: str) -> Generator[dict, None, None]:
                     token = 'ATRIB_ADD'
                 elif next_char == '-':
                     token = 'ATRIB_SUB'
-            yield {'TOKEN': token, 'VAL': lexeme}
+            yield {token: lexeme}
         pos = val.end() if val is not None else pos + 1
         val = regex.match(code, pos)
 
@@ -171,5 +171,9 @@ if __name__ == '__main__':
     tokens = list(lexicon_from_file('codigo.txt'))
     # print(tokens)
 
-    # for token in tokens:
-    #     print(f"{token['TOKEN']}: {token['VAL']}")
+    indice = 1  
+
+    o = ((key, value) for key, value in tokens[indice].items())
+    
+    for chave, valor in o:
+        print(chave, valor)
