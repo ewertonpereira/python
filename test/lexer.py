@@ -41,7 +41,8 @@ spec: List[Tuple[str, str]] = [
 
 def lexicon(code: str) -> Generator[str, None, None]:
     tok: str = '|'.join('(?P<%s>%s)' % pair for pair in spec)
-    get_token: Callable[[str, int, int], Optional[Match[str]]] = re.compile(tok).match
+    get_token: Callable[[str, int, int],
+                        Optional[Match[str]]] = re.compile(tok).match
 
     pos: int = 0
     val: Optional[Match[str]] = get_token(code, pos)
@@ -86,7 +87,8 @@ def verify_tokens(file_name: str) -> bool:
         code = file.read()
 
     tok: str = '|'.join('(?P<%s>%s)' % pair for pair in spec)
-    get_token: Callable[[str, int, int], Optional[Match[str]]] = re.compile(tok).match
+    get_token: Callable[[str, int, int],
+                        Optional[Match[str]]] = re.compile(tok).match
 
     pos: int = 0
     val: Optional[Match[str]] = get_token(code, pos)
@@ -103,23 +105,10 @@ def verify_tokens(file_name: str) -> bool:
         pos = val.end()
         val = get_token(code, pos)
 
-
     if var_found:
         return re.search(r'\bvar\b', code) is not None
 
     return True
-
-
-def get_tokens_code(file_name: str) -> List[str]:
-    code = read_code(file_name)
-    tokens = []
-
-    for token in lexicon(code):
-        token_parts = token.split('\t')
-        if len(token_parts) >= 2:
-            token_name = token_parts[0].split(':')[1].strip()
-            tokens.append(token_name.split(':')[0].strip())
-    return tokens
 
 
 def lexicon_from_file(file_name: str) -> Generator[dict, None, None]:
@@ -130,15 +119,15 @@ def lexicon_from_file(file_name: str) -> Generator[dict, None, None]:
     regex = re.compile('|'.join('(?P<%s>%s)' % pair for pair in spec))
 
     special_tokens = {
-    'if': 'IF',
-    'else': 'ELSE',
-    'while': 'WHILE',
-    'var': 'VAR',
-    'int': 'INT',
-    'real': 'REAL',
-    'for': 'FOR',
-    'str': 'STR',
-    'bool': 'BOOL'
+        'if': 'IF',
+        'else': 'ELSE',
+        'while': 'WHILE',
+        'var': 'VAR',
+        'int': 'INT',
+        'real': 'REAL',
+        'for': 'FOR',
+        'str': 'STR',
+        'bool': 'BOOL'
     }
 
     pos: int = 0
@@ -164,16 +153,6 @@ def lexicon_from_file(file_name: str) -> Generator[dict, None, None]:
 
 
 if __name__ == '__main__':
-    # analyze_code('codigo.txt')
-    # print(get_tokens_code('codigo.txt'))
-    print(check_different_tokens := verify_tokens('codigo.txt'))
-
-    tokens = list(lexicon_from_file('codigo.txt'))
-    # print(tokens)
-
-    indice = 1  
-
-    o = ((key, value) for key, value in tokens[indice].items())
-    
-    for chave, valor in o:
-        print(chave, valor)
+    analyze_code('codigo.txt')
+    # print(check_different_tokens := verify_tokens('codigo.txt'))
+    # print(tokens := list(lexicon_from_file('codigo.txt')))
