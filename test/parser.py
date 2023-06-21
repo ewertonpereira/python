@@ -1,8 +1,8 @@
 from typing import List
-from lexer import verify_tokens, get_tokens_code, lexicon_from_file
+from lexer import verify_tokens, lexicon_from_file
 
 
-def analyze_code_with_verification(file_name: str, show_errors: bool = True) -> bool:
+def analyze_code_with_verification(file_name: str) -> bool:
     if verify_tokens(file_name):
         print("Verificação de tokens bem-sucedida.\nComeçaremos o processo de análise sintática. Por favor, aguarde...")
         return True
@@ -12,9 +12,7 @@ def analyze_code_with_verification(file_name: str, show_errors: bool = True) -> 
 def parser(tokens) ->  list[str]:
     token_index: int = 0
     token_count: int = len(tokens)
-    
-    token_key = list(((key, value) for key, value in tokens
-    [token_index].items()))
+    token_key = list(((key, value) for key, value in tokens[token_index].items()))
     errors: List[str] = []
     matchs: List[str] = []
 
@@ -287,7 +285,6 @@ def parser(tokens) ->  list[str]:
 
 def analyze_code(file_name: str) -> None:
     if analyze_code_with_verification(file_name):
-        #token_symbols = get_tokens_code(file_name)
         token_symbols = list(lexicon_from_file(file_name))
         # print(token_symbols)
         errors = parser(token_symbols)
