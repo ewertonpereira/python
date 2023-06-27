@@ -1,5 +1,5 @@
 from typing import List
-from lexer import verify_tokens, lexicon_from_file
+from lexer import verify_tokens, get_tokens_code
 
 
 def analyze_code_with_verification(file_name: str) -> bool:
@@ -7,28 +7,47 @@ def analyze_code_with_verification(file_name: str) -> bool:
         print("Verificação de tokens bem-sucedida.\nComeçaremos o processo de análise sintática. Por favor, aguarde...")
         return True
     return False
-    
 
-def parser(tokens) ->  list[str]:
+
+def parser(tokens: List[str], lexemas: List[str]) -> None:
     token_index: int = 0
     token_count: int = len(tokens)
-    token_key = list(((key, value) for key, value in tokens[token_index].items()))
+    token: str = tokens[token_index]
     errors: List[str] = []
     matchs: List[str] = []
+    cont = -1
+    contLabel = -1
 
-    
+
+    def geraTemp():
+        nonlocal cont
+        cont += 1
+        return ("T"+str(cont))
+
+
+    def geraLabel():
+        nonlocal contLabel
+        contLabel += 1
+        return ("L"+str(contLabel))
+
+
+    def geraCod(linhaCod):
+        print(linhaCod)
+
+
     def match(expected_token: str) -> None:
-        nonlocal token_index, token_key
-        if token_key[0][0] == expected_token:
+        nonlocal token, token_index
+        if token == expected_token:
+            lexema = lexemas[token_index]
             token_index += 1
             if token_index < token_count:
-                token_key = list(((key, value) for key, value in tokens
-    [token_index].items()))
+                token = tokens[token_index]
             else:
                 token = None
         else:
-            errors.append(f"Expected '{expected_token}', but found '{token_key[0][1]}'")
-            
+            errors.append(f"Expected '{expected_token}', but found '{token}'")
+        return lexema
+
 
     def analyze_list(token: str) -> None:
         actions = {
@@ -40,212 +59,256 @@ def parser(tokens) ->  list[str]:
             'RBRACE': lambda: token,
         }
 
-        if token_key[0][0] in actions:
-            actions[token_key[0][0]]()
+        if token in actions:
+            actions[token]()
         else:
             errors.append(f'Variável inválida: {token}')
-        
+
 
     def check_id():
-        if token_key[0][0] == 'ID':
-            match('ID')
+        # ------------------------------------------------------------
+        relTEMP = ''
+        if token == 'ID':
+            # ------------------------------------------------------------
+            lexID = match('ID')
             matchs.append('ID ok')
-            if token_key[0][0] == 'COMMA':
+            if token == 'COMMA':
                 match('COMMA')
                 check_id()
-            elif token_key[0][0] == 'ATRIB':
-                match('ATRIB')
+            elif token == 'ATRIB':
+                #  ------------------------------------------------------------
+                lexATRIB = match('ATRIB')
                 matchs.append('ATRIB ok')
-                if token_key[0][0] == 'LPAREN':
+                if token == 'LPAREN':
                     check_arithmetic_expressions()
-                elif token_key[0][0] == 'ID' or token_key[0][0] == 'NUM':
-                    match(token_key[0][0])
-                    check_basic_arithmetic_expressions()
-                    if token_key[0][0] == 'NUM':
-                        check_num()
-                    if token_key[0][0] == 'ID':
-                        check_id()
+                elif token == 'ID' or token == 'NUM':
+                    #  ------------------------------------------------------------
+                    lexEXP_LEFT = match(token)
+# ------------------------------------------------------------
+                    lexOPA = check_basic_arithmetic_expressions()
+# ------------------------------------------------------------
+
+                    if token == 'NUM':
+                        lexEXP_RIGHT = check_num()
+
+                    if token == 'ID':
+                        lexEXP_RIGHT = check_id()
+
+                    # geraCod(lexID+lexATRIB+lexEXP_LEFT+lexOPA+lexEXP_RIGHT)
                 else:
-                    errors.append(f'"ATRIB" expected a variable, but received {token_key[0][1]}')
-            elif token_key[0][0] in ['LT', 'GT', 'LTE', 'GTE', 'EQ']:
-                match(token_key[0][0])               
-                if token_key[0][0] == 'ID' or token_key[0][0] == 'NUM':
+                    errors.append(
+                        f'"ATRIB" expected a variable, but received {token}')
+            elif token in ['LT', 'GT', 'LTE', 'GTE', 'EQ']:
+                lexOPREL = match(token)
+                if token == 'ID' or token == 'NUM':
                     matchs.append('Relational expressions ok')
-                    match(token_key[0][0])
+# --------------------------------------
+                    lexRIGHT = match(token)
+                    # relTrue = geraLabel()
+                    # relFalse = geraLabel()
+                    relTEMP = geraTemp()
+                    geraCod(relTEMP+' = '+lexID+lexOPREL+lexRIGHT)
+                    # geraCod('if '+relTEMP+' goto '+relFalse)
+                    # relTEMP = geraTemp()
+                    # geraCod('goto '+relFalse  )
+                    # #geraCod('if '+ lexID+lexOPREL+lexRIGHT+' goto '+relTrue)
+                    # geraCod(relTEMP+' = 0')
+                    # #geraCod('goto '+relFalse)
+                    # geraCod(relTrue+' :')
+                    # geraCod(relTEMP+' = 1')
+                    # geraCod(relFalse+' :')
+                    #print(relTEMP, 'aaaaaaaaaaaaaaa')
+                    return relTEMP
                 else:
-                    errors.append(f"Relational expressions expected a variable, but received {token_key[0][1]}")
-                    exit()      
-            elif token_key[0][0] in ['ADD', 'SUB', 'MUL', 'DIV', 'POW']:
-                match(token_key[0][0])
-                if token_key[0][0] == 'ID' or token_key[0][0] == 'NUM':
+                    errors.append(
+                        f"Relational expressions expected a variable, but received {token}")
+                    exit()
+            elif token in ['ADD', 'SUB', 'MUL', 'DIV', 'POW']:
+                match(token)
+                if token == 'ID' or token == 'NUM':
                     matchs.append('Arithmetic expressions ok')
-                    match(token_key[0][0])
+                    match(token)
                 else:
-                    errors.append(f"Arithmetic expressions expected a variable, but received {token_key[0][1]}")
-            elif token_key[0][0] == 'RPAREN':
+                    errors.append(
+                        f"Arithmetic expressions expected a variable, but received {token}")
+            elif token == 'RPAREN':
                 check_arithmetic_expressions()
-            elif token_key[0][0] in ['ATRIB_ADD', 'ATRIB_SUB']:
+            elif token in ['ATRIB_ADD', 'ATRIB_SUB']:
                 matchs.append('combined assignment operator ok')
-                match(token_key[0][0])
-                if token_key[0][0] == 'ID':
+                match(token)
+                if token == 'ID':
                     check_id()
-                elif token_key[0][0] == 'NUM':
+                elif token == 'NUM':
                     check_num()
                 else:
-                    errors.append(f'Expected "ID" or "NUM", but received {token_key[0][1]}'   )
-            if token_key[0][0] == 'SEMICOLON':
+                    errors.append(
+                        f'Expected "ID" or "NUM", but received {token}')
+            if token == 'SEMICOLON':
                 check_semicolon()
-                return True
+                return lexID
+            # else:
+            #     return False
             else:
-                return False
-        else:
-            errors.append(f'Expected "ID", but received {token_key[0][1]}')
-            
+                errors.append(f'Expected "ID", but received {token}')
+
 
     def check_semicolon() -> None:
         matchs.append('SEMICOLON ok')
         match('SEMICOLON')
         if token_index >= token_count:
             print('Fim do código')
-            
-            
+
+
     def check_while() -> bool:
         match('WHILE')
         matchs.append('WHILE ok')
-        if token_key[0][0] == 'LPAREN':
+        if token == 'LPAREN':
             match('LPAREN')
             matchs.append('LPAREN ok')
-            if token_key[0][0] == 'ID':
+            if token == 'ID':
                 check_id()
-                if token_key[0][0] == 'RPAREN':
+                if token == 'RPAREN':
                     match('RPAREN')
                     matchs.append('RPAREN ok')
-                    if token_key[0][0] == 'LBRACE':
+                    if token == 'LBRACE':
                         match('LBRACE')
                         matchs.append('LBRACE ok')
-                        if token_key[0][0] == 'ID':
+                        if token == 'ID':
                             check_id()
-                            if token_key[0][0] == 'IF':
+                            if token == 'IF':
                                 check_if()
-                                analyze_list(token_key[0][0])
-                                if token_key[0][0] == 'ELSE':
+                                analyze_list(token)
+                                if token == 'ELSE':
                                     check_else()
-                                analyze_list(token_key[0][0])
-                        if token_key[0][0] == 'RBRACE':
+                                analyze_list(token)
+                        if token == 'RBRACE':
                             matchs.append('RBRACE WHILE ok')
                             if token_index + 1 < token_count:
                                 match('RBRACE')
-                            analyze_list(token_key[0][0])                          
+                            analyze_list(token)
                 else:
                     errors.append(
-                        f'Expected "ID" or ")", but received {token_key[0][1]}')
+                        f'Expected "ID" or "RPAREN 1", but received {token}')
             else:
                 errors.append(
-                    f'Expected "ID" or ")", but received {token_key[0][1]}')
+                    f'Expected "ID" or "RPAREN" 2, but received {token}')
         return True
 
 
     def check_if() -> None:
         match('IF')
         matchs.append('IF ok')
-        if token_key[0][0] == 'LPAREN':
+        if token == 'LPAREN':
             match('LPAREN')
             matchs.append('LPAREN ok')
-            check_id()
-            if token_key[0][0] == 'RPAREN':
+# ------------------------------------------------------------
+            relTEMP = check_id()
+            if token == 'RPAREN':
                 match('RPAREN')
                 matchs.append('RPAREN ok')
-                if token_key[0][0] == 'LBRACE':
+                if token == 'LBRACE':
                     matchs.append('LBRACE ok')
                     match('LBRACE')
+#  ------------------------------------------------------------
+                    ifFALSE = geraLabel()
+                    geraCod('if '+relTEMP+' goto '+ifFALSE)
+                    ifTRUE = geraLabel()
+# ------------------------------------------------------------
+                    geraCod('goto '+ifTRUE+' :')
                     check_id()
-                    if token_key[0][0] == 'RBRACE':
+# ------------------------------------------------------------
+                    geraCod('goto SNEXT')
+                    if token == 'RBRACE':
                         matchs.append('RBRACE  ok')
+# ------------------------------------------------------------
+                        geraCod(ifFALSE+' :')
                         if token_index + 1 < token_count:
                             match('RBRACE')
-                            analyze_list(token_key[0][0])
+                            analyze_list(token)
                     else:
                         errors.append(
-                            f'Expected "}}", but received {token_key[0][1]}')
+                            f'Expected "RBRACE", but received {token}')
                 else:
-                    errors.append(f'Expected "{{", but received {token_key[0][1]}')
+                    errors.append(f'Expected "LBRACE", but received {token}')
             else:
-                errors.append(f'Expected ")", but received {token_key[0][1]}')
+                errors.append(f'Expected "RPAREN", but received {token}')
         else:
-            errors.append(f'Expected "(", but received {token_key[0][1]}')
+            errors.append(f'Expected "LPAREN", but received {token}')
 
 
     def check_else() -> None:
         match('ELSE')
         matchs.append('ELSE ok')
-        if token_key[0][0] == 'LBRACE':
+        if token == 'LBRACE':
             match('LBRACE')
             matchs.append('LBRACE ok')
             check_id()
-            if token_key[0][0] == 'RBRACE':
+            if token == 'RBRACE':
                 matchs.append('RBRACE ELSE ok')
                 if token_index + 1 < token_count:
                     match('RBRACE')
-                    analyze_list(token_key[0][0])
+                    analyze_list(token)
             else:
-                errors.append(f'Expected "}}", but received {token_key[0][1]}')
+                errors.append(f'Expected "RBRACE", but received {token}')
         else:
-            errors.append(f'Expected "{{", but received {token_key[0][1]}')
+            errors.append(f'Expected "LBRACE", but received {token}')
 
 
     def check_num() -> None:
-        match('NUM')
+        opn = match('NUM')
         matchs.append('NUM ok')
+        return opn
         check_basic_arithmetic_expressions()
         check_relational_expressions()
-        
+
 
     def check_basic_arithmetic_expressions() -> None:
-        if token_key[0][0] in ['ADD', 'SUB', 'MUL', 'DIV']:
-            match(token_key[0][0])
+        if token in ['ADD', 'SUB', 'MUL', 'DIV']:
+            lexOPA = match(token)
             matchs.append('Expressões aritméticas ok')
-        elif token_key[0][0] == 'POW':
+            return lexOPA
+        elif token == 'POW':
             match('POW')
-            if token_key[0][0] == 'ID' or token_key[0][0] == 'NUM':
-                match(token_key[0][0])
+            if token == 'ID' or token == 'NUM':
+                match(token)
                 check_basic_arithmetic_expressions()
 
-    
+
     def check_arithmetic_expressions() -> None:
-        if token_key[0][0] == 'LPAREN':
+        if token == 'LPAREN':
             match('LPAREN')
             matchs.append('LPAREN ok')
             check_arithmetic_expressions()
-            if token_key[0][0] == 'RPAREN':
+            if token == 'RPAREN':
                 match('RPAREN')
                 matchs.append('RPAREN CLOSED ok')
                 if token_index + 1 < token_count:
                     check_basic_arithmetic_expressions()
                     check_arithmetic_expressions()
             else:
-                errors.append(f'Expected ")", but received {token_key[0][1]}')
-        elif token_key[0][0] == 'NUM':
+                errors.append(f'Expected "RPAREN", but received {token}')
+        elif token == 'NUM':
             matchs.append('NUM ok')
-            match('NUM')
+            lexema = match('NUM')
             check_basic_arithmetic_expressions()
             check_arithmetic_expressions()
-        elif token_key[0][0] == 'ID':
+        elif token == 'ID':
             check_id()
-        elif token_key[0][0] == 'LPAREN':
+        elif token == 'LPAREN':
             matchs.append('LPAREN ok')
 
 
     def check_relational_expressions() -> None:
-        if token_key[0][0] in ['LT', 'GT', 'LTE', 'GTE', 'EQ']:
+        if token in ['LT', 'GT', 'LTE', 'GTE', 'EQ']:
             matchs.append('Relational expressions ok')
-            match(token_key[0][0])
+            match(token)
 
 
     def check_var() -> None:
         match('VAR')
         matchs.append('VAR ok')
-        if token_key[0][0] in ['INT', 'STR', 'REAL', 'BOOL']:
-            match(token_key[0][0])
+        if token in ['INT', 'STR', 'REAL', 'BOOL']:
+            match(token)
             check_id()
 
 
@@ -257,37 +320,35 @@ def parser(tokens) ->  list[str]:
 
 
     while token_index < token_count:
-        if token_key[0][0] == None:
+        if token == None:
             break
-        elif token_key[0][0] == 'ID':
+        elif token == 'ID':
             check_id()
-        elif token_key[0][0] == 'VAR':
+        elif token == 'VAR':
             check_var()
-        elif token_key[0][0] == 'IF':
+        elif token == 'IF':
             check_if()
-        elif token_key[0][0] == 'ELSE':
+        elif token == 'ELSE':
             check_else()
-        elif token_key[0][0] == 'WHILE':
+        elif token == 'WHILE':
             check_while()
-        elif token_key[0][0] not in ['VAR', 'ID', 'IF', 'WHILE']:
+        elif token not in ['VAR', 'ID', 'IF', 'WHILE']:
             if not matchs:
-                errors.append(f"This token can not start a sentence: {token_key[0][1]}")
+                errors.append(f"This token can not start a sentence: {token}")
             break
         else:
-            errors.append(f"Invalid token: {token_key[0][1]}")
-        
+            errors.append(f"Invalid token: {token}")
 
-    if matchs:
-        show_list_checks()
+    # if matchs:
+    #     show_list_checks()
 
     return errors
 
 
 def analyze_code(file_name: str) -> None:
     if analyze_code_with_verification(file_name):
-        token_symbols = list(lexicon_from_file(file_name))
-        # print(token_symbols)
-        errors = parser(token_symbols)
+        token_symbols, lexemas = get_tokens_code(file_name)
+        errors = parser(token_symbols, lexemas)
         if not errors:
             success_message = "Análise sintática bem-sucedida!"
             return print(success_message)
