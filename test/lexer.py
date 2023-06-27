@@ -41,8 +41,7 @@ spec: List[Tuple[str, str]] = [
 
 def lexicon(code: str) -> Generator[str, None, None]:
     tok: str = '|'.join('(?P<%s>%s)' % pair for pair in spec)
-    get_token: Callable[[str, int, int],
-                        Optional[Match[str]]] = re.compile(tok).match
+    get_token: Callable[[str, int, int], Optional[Match[str]]] = re.compile(tok).match
 
     pos: int = 0
     val: Optional[Match[str]] = get_token(code, pos)
@@ -67,19 +66,13 @@ def lexicon(code: str) -> Generator[str, None, None]:
 def read_code(file_name: str) -> str:
     with open(file_name, 'r') as file:
         code = file.read()
-
     return code
 
 
-def analyze_code(file_name: str):
+def analyze_code(file_name: str) -> None:
     code = read_code(file_name)
-    tokens = []
-
     for token in lexicon(code):
         print(token)
-        tokens.append(token)
-
-    return tokens
 
 
 def verify_tokens(file_name: str) -> bool:
@@ -87,8 +80,7 @@ def verify_tokens(file_name: str) -> bool:
         code = file.read()
 
     tok: str = '|'.join('(?P<%s>%s)' % pair for pair in spec)
-    get_token: Callable[[str, int, int],
-                        Optional[Match[str]]] = re.compile(tok).match
+    get_token: Callable[[str, int, int], Optional[Match[str]]] = re.compile(tok).match
 
     pos: int = 0
     val: Optional[Match[str]] = get_token(code, pos)
@@ -111,48 +103,22 @@ def verify_tokens(file_name: str) -> bool:
     return True
 
 
-def lexicon_from_file(file_name: str) -> Generator[dict, None, None]:
-    with open(file_name, 'r') as file:
-        code = file.read()
+def get_tokens_code(file_name: str):
+    code = read_code(file_name)
+    tokens = []
+    lexemas = []
 
-    # Compile the regular expression once
-    regex = re.compile('|'.join('(?P<%s>%s)' % pair for pair in spec))
-
-    special_tokens = {
-        'if': 'IF',
-        'else': 'ELSE',
-        'while': 'WHILE',
-        'var': 'VAR',
-        'int': 'INT',
-        'real': 'REAL',
-        'for': 'FOR',
-        'str': 'STR',
-        'bool': 'BOOL'
-    }
-
-    pos: int = 0
-    val: Optional[Match[str]] = regex.match(code, pos)
-
-    while val is not None:
-        token: Optional[str] = val.lastgroup
-        lexeme: Optional[str] = val.group()
-        if token != 'SKIP':
-            if token == 'ID':
-                stripped_lexeme = lexeme.strip()
-                if stripped_lexeme in special_tokens:
-                    token = special_tokens[stripped_lexeme].upper()
-            elif token == 'ATRIB':
-                next_char = code[val.end():val.end() + 1]
-                if next_char == '+':
-                    token = 'ATRIB_ADD'
-                elif next_char == '-':
-                    token = 'ATRIB_SUB'
-            yield {token: lexeme}
-        pos = val.end() if val is not None else pos + 1
-        val = regex.match(code, pos)
+    for token in lexicon(code):
+        token_parts = token.split('\t')
+        if len(token_parts) >= 2:
+            token_name = token_parts[0].split(':')[1].strip()
+            tokens.append(token_name.split(':')[0].strip())
+            lexema_name = token_parts[1].split(':')[1].strip()
+            lexemas.append(lexema_name.split(':')[0].strip())
+    return tokens, lexemas
 
 
 if __name__ == '__main__':
-    analyze_code('codigo.txt')
-    # print(check_different_tokens := verify_tokens('codigo.txt'))
-    # print(tokens := list(lexicon_from_file('codigo.txt')))
+#    analyze_code('codigo2.txt')
+    tokens, lexemas = get_tokens_code('codigo2.txt')
+#    print(check_different_tokens := verify_tokens('codigo2.txt'))
