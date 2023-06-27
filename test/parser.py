@@ -9,7 +9,7 @@ def analyze_code_with_verification(file_name: str) -> bool:
     return False
 
 
-def parser(tokens: List[str], lexemas: List[str]) -> None:
+def parser(tokens: List[str], lexemas: List[str]):
     token_index: int = 0
     token_count: int = len(tokens)
     token: str = tokens[token_index]
@@ -35,15 +35,16 @@ def parser(tokens: List[str], lexemas: List[str]) -> None:
         print(linhaCod)
 
 
-    def match(expected_token: str) -> None:
+    def match(expected_token: str) :
         nonlocal token, token_index
+        lexema = None
         if token == expected_token:
             lexema = lexemas[token_index]
             token_index += 1
             if token_index < token_count:
                 token = tokens[token_index]
-            else:
-                token = None
+            # else:
+            #     token = None
         else:
             errors.append(f"Expected '{expected_token}', but found '{token}'")
         return lexema
@@ -107,7 +108,7 @@ def parser(tokens: List[str], lexemas: List[str]) -> None:
                     # relTrue = geraLabel()
                     # relFalse = geraLabel()
                     relTEMP = geraTemp()
-                    geraCod(relTEMP+' = '+lexID+lexOPREL+lexRIGHT)
+                    geraCod(relTEMP+' = '+lexID+lexOPREL+lexRIGHT) # type: ignore
                     # geraCod('if '+relTEMP+' goto '+relFalse)
                     # relTEMP = geraTemp()
                     # geraCod('goto '+relFalse  )
@@ -211,7 +212,7 @@ def parser(tokens: List[str], lexemas: List[str]) -> None:
                     match('LBRACE')
 #  ------------------------------------------------------------
                     ifFALSE = geraLabel()
-                    geraCod('if '+relTEMP+' goto '+ifFALSE)
+                    geraCod('if '+relTEMP+' goto '+ifFALSE) # type: ignore
                     ifTRUE = geraLabel()
 # ------------------------------------------------------------
                     geraCod('goto '+ifTRUE+' :')
@@ -254,7 +255,7 @@ def parser(tokens: List[str], lexemas: List[str]) -> None:
             errors.append(f'Expected "LBRACE", but received {token}')
 
 
-    def check_num() -> None:
+    def check_num():
         opn = match('NUM')
         matchs.append('NUM ok')
         return opn
@@ -262,7 +263,7 @@ def parser(tokens: List[str], lexemas: List[str]) -> None:
         check_relational_expressions()
 
 
-    def check_basic_arithmetic_expressions() -> None:
+    def check_basic_arithmetic_expressions():
         if token in ['ADD', 'SUB', 'MUL', 'DIV']:
             lexOPA = match(token)
             matchs.append('Expressões aritméticas ok')
