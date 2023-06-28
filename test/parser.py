@@ -66,9 +66,11 @@ def parser(tokens: List[str], lexemas: List[str]):
             errors.append(f'Variável inválida: {token}')
 
 
+    relTEMP = ''
     def check_id():
+        nonlocal relTEMP, ifTRUE, ifFALSE, lmark
         # ------------------------------------------------------------
-        relTEMP = ''
+        
         if token == 'ID':
             # ------------------------------------------------------------
             lexID = match('ID')
@@ -94,8 +96,22 @@ def parser(tokens: List[str], lexemas: List[str]):
 
                     if token == 'ID':
                         lexEXP_RIGHT = check_id()
-
-                    # geraCod(lexID+lexATRIB+lexEXP_LEFT+lexOPA+lexEXP_RIGHT)
+                    
+                    if ifFALSE == 'L0':
+                        geraCod(ifFALSE+' :')
+                    else:
+                        geraCod(lmark+' :')
+                        lmark = geraLabel()
+                     ################
+                
+                    relTEMP = geraTemp()
+                    geraCod(relTEMP+ ' = '+lexEXP_LEFT+lexOPA+lexEXP_RIGHT)# type: ignore
+                    geraCod(lexID+' = '+relTEMP) # type: ignore
+                    ifTRUE = geraLabel()
+                    geraCod('goto '+ifTRUE+' :')# type: ignore
+                    ifFALSE = ifTRUE
+                    relTEMP = ifTRUE
+                    print(' ')
                 else:
                     errors.append(
                         f'"ATRIB" expected a variable, but received {token}')
@@ -105,20 +121,9 @@ def parser(tokens: List[str], lexemas: List[str]):
                     matchs.append('Relational expressions ok')
 # --------------------------------------
                     lexRIGHT = match(token)
-                    # relTrue = geraLabel()
-                    # relFalse = geraLabel()
+                   
                     relTEMP = geraTemp()
                     geraCod(relTEMP+' = '+lexID+lexOPREL+lexRIGHT) # type: ignore
-                    # geraCod('if '+relTEMP+' goto '+relFalse)
-                    # relTEMP = geraTemp()
-                    # geraCod('goto '+relFalse  )
-                    # #geraCod('if '+ lexID+lexOPREL+lexRIGHT+' goto '+relTrue)
-                    # geraCod(relTEMP+' = 0')
-                    # #geraCod('goto '+relFalse)
-                    # geraCod(relTrue+' :')
-                    # geraCod(relTEMP+' = 1')
-                    # geraCod(relFalse+' :')
-                    #print(relTEMP, 'aaaaaaaaaaaaaaa')
                     return relTEMP
                 else:
                     errors.append(
@@ -196,7 +201,11 @@ def parser(tokens: List[str], lexemas: List[str]):
         return True
 
 
+    lmark = ''
+    ifFALSE = ''
+    ifTRUE = ''
     def check_if() -> None:
+        nonlocal relTEMP, ifTRUE, ifFALSE, lmark
         match('IF')
         matchs.append('IF ok')
         if token == 'LPAREN':
@@ -214,15 +223,12 @@ def parser(tokens: List[str], lexemas: List[str]):
                     ifFALSE = geraLabel()
                     geraCod('if '+relTEMP+' goto '+ifFALSE) # type: ignore
                     ifTRUE = geraLabel()
-# ------------------------------------------------------------
                     geraCod('goto '+ifTRUE+' :')
+                    lmark = ifTRUE
+                    print(' ')
                     check_id()
-# ------------------------------------------------------------
-                    geraCod('goto SNEXT')
                     if token == 'RBRACE':
                         matchs.append('RBRACE  ok')
-# ------------------------------------------------------------
-                        geraCod(ifFALSE+' :')
                         if token_index + 1 < token_count:
                             match('RBRACE')
                             analyze_list(token)
