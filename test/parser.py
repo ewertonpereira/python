@@ -70,7 +70,7 @@ def parser(tokens: List[str], lexemas: List[str]):
     lexOPREL = ''
     last_label = ''
     def check_id():
-        nonlocal relTEMP, ifTRUE, ifFALSE, lmark, last_token, lexOPREL, last_label
+        nonlocal relTEMP, ifTRUE, ifFALSE, lmark, last_token, lexOPREL, last_label, ifmark
         
         if token == 'ID':
             lexID = match('ID')
@@ -95,28 +95,36 @@ def parser(tokens: List[str], lexemas: List[str]):
                     if token == 'ID':
                         lexEXP_RIGHT = check_id()
                     
+
                     if ifFALSE == 'L0':
                         geraCod(ifFALSE+' :')
                     elif last_token == 'ELSE':
-                        geraCod(lmark+' :')
+                        geraCod(ifmark+' :')
                         lmark = geraLabel()
-                        last_token = 'LABEL' ####
+                        last_token = 'LABEL'
                     elif last_token == 'LABEL':
-                        geraCod(last_label+' :') # type: ignore
+                        pass
+                        # geraCod(last_label+' :') # type: ignore
                     else:
                         geraCod(lmark+' :')
                         lmark = geraLabel()
                 
+
                     relTEMP = geraTemp()
-                    #geraCod(relTEMP+ ' = '+lexEXP_LEFT+lexOPA+lexEXP_RIGHT)# type: ignore
+                    if lexOPA:
+                        geraCod(relTEMP+ ' = '+lexEXP_LEFT+lexOPA+lexEXP_RIGHT)# type: ignore
+                    else: 
+                        geraCod(relTEMP+ ' = '+lexEXP_LEFT) # type: ignore
                     geraCod(lexID+' = '+relTEMP) # type: ignore
                     ifTRUE = geraLabel()
                     
                     if lexOPREL:
-                        geraCod('goto '+ifTRUE+' :')# type: ignore
-                        lexOPREL = False
-                        if last_token == 'IF':
-                            last_label = ifTRUE
+                        if last_token != 'WHILE' or last_token != 'ELSE':
+                            #print(lmark)
+                            geraCod('goto '+lmark+' :')# type: ignore
+                            lexOPREL = False
+                            if last_token == 'IF':
+                                last_label = ifTRUE
                         
                     ifFALSE = ifTRUE
                     relTEMP = ifTRUE
@@ -149,12 +157,19 @@ def parser(tokens: List[str], lexemas: List[str]):
             elif token == 'RPAREN':
                 check_arithmetic_expressions()
             elif token in ['ATRIB_ADD', 'ATRIB_SUB']:
-                matchs.append('combined assignment operator ok')
-                match(token)
-                if token == 'ID':
-                    check_id()
-                elif token == 'NUM':
-                    check_num()
+                lexOPA = combined_assignment_operator()
+                
+                #match(token)
+                if token == 'ID' or token == 'NUM':
+                    if token == 'ID':
+                        lexEXP_RIGHT = check_id()
+                    if token == 'NUM':
+                        lexEXP_RIGHT = check_num()
+
+                    relTEMP = geraTemp()
+                    geraCod(relTEMP+ ' = '+lexID+lexOPA+lexEXP_RIGHT)# type: ignore
+                    geraCod(lexID+' = '+relTEMP)# type: ignore
+            
                 else:
                     errors.append(
                         f'Expected "ID" or "NUM", but received {token}')
@@ -175,6 +190,8 @@ def parser(tokens: List[str], lexemas: List[str]):
 
 
     def check_while() -> bool:
+        nonlocal lmark, ifFALSE, last_token
+        last_token = token
         match('WHILE')
         matchs.append('WHILE ok')
         if token == 'LPAREN':
@@ -220,8 +237,9 @@ def parser(tokens: List[str], lexemas: List[str]):
     lmark = ''
     ifFALSE = ''
     ifTRUE = ''
+    ifmark = ''
     def check_if() -> None:
-        nonlocal relTEMP, ifTRUE, ifFALSE, lmark, last_token
+        nonlocal relTEMP, ifTRUE, ifFALSE, lmark, ifmark 
         last_token = token
         match('IF')
         matchs.append('IF ok')
@@ -237,11 +255,16 @@ def parser(tokens: List[str], lexemas: List[str]):
                     matchs.append('LBRACE ok')
                     match('LBRACE')
 #  ------------------------------------------------------------
-                    ifFALSE = geraLabel()
+                    if last_token =='':
+                        ifFALSE = geraLabel()
+                        
                     geraCod('if '+relTEMP+' goto '+ifFALSE) # type: ignore
-                    ifTRUE = geraLabel()
-                    geraCod('goto '+ifTRUE+' :')
+
                     lmark = ifTRUE
+                    ifTRUE = geraLabel()
+
+                    geraCod('goto '+ifTRUE+' :')
+                    ifmark = ifTRUE
                     print(' ')
                     check_id()
                     if token == 'RBRACE':
@@ -299,6 +322,12 @@ def parser(tokens: List[str], lexemas: List[str]):
             if token == 'ID' or token == 'NUM':
                 match(token)
                 check_basic_arithmetic_expressions()
+
+    def combined_assignment_operator():
+        if token in ['ATRIB_ADD', 'ATRIB_SUB']:
+            lexOPA = match(token)
+            matchs.append('combined assignment operator ok')
+            return lexOPA
 
 
     def check_arithmetic_expressions() -> None:
