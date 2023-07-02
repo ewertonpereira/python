@@ -1,7 +1,17 @@
-if (cont < 5) {
-    num = num + cont2;
+var int cont;
+var int num;
+var real cont2;
+
+num = 0;
+while (cont < 10) {
+    cont2 = 3.1415 * cont;
+    if (cont < 5) {
+        num = num + cont2;
+    }
+    else {
+        cont = 0;
+    }
+    cont = cont + 1;
 }
-else {
-    cont = a * b;
-}
-cont = cont + 1;
+
+codigo += 9;

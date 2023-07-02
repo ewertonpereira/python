@@ -69,8 +69,9 @@ def parser(tokens: List[str], lexemas: List[str]):
     relTEMP = ''
     lexOPREL = ''
     last_label = ''
+    last_go_to= ''
     def check_id():
-        nonlocal relTEMP, ifTRUE, ifFALSE, lmark, last_token, lexOPREL, last_label, ifmark
+        nonlocal relTEMP, ifTRUE, ifFALSE, lmark, last_token, lexOPREL, last_label, ifmark, last_go_to
         
         if token == 'ID':
             lexID = match('ID')
@@ -84,9 +85,7 @@ def parser(tokens: List[str], lexemas: List[str]):
                 if token == 'LPAREN':
                     check_arithmetic_expressions()
                 elif token == 'ID' or token == 'NUM':
-                    #  ------------------------------------------------------------
                     lexEXP_LEFT = match(token)
-# ------------------------------------------------------------
                     lexOPA = check_basic_arithmetic_expressions()
 
                     if token == 'NUM':
@@ -95,19 +94,23 @@ def parser(tokens: List[str], lexemas: List[str]):
                     if token == 'ID':
                         lexEXP_RIGHT = check_id()
                     
-
-                    if ifFALSE == 'L0':
-                        geraCod(ifFALSE+' :')
-                    elif last_token == 'ELSE':
-                        geraCod(ifmark+' :')
-                        lmark = geraLabel()
-                        last_token = 'LABEL'
-                    elif last_token == 'LABEL':
-                        pass
-                        # geraCod(last_label+' :') # type: ignore
-                    else:
-                        geraCod(lmark+' :')
-                        lmark = geraLabel()
+                    if last_token in ['IF', 'ELSE', 'WHILE']:
+                        # if ifFALSE == 'L0':
+                        #     geraCod(ifFALSE+' :')
+                        if last_token == 'WHILE':
+                            geraCod(whilemark+' :')
+                        elif last_token == 'IF':
+                            geraCod(last_go_to+' :')
+                        elif last_token == 'ELSE':
+                            geraCod(ifmark+' :')
+                            lmark = geraLabel()
+                            last_token = 'LABEL'
+                        elif last_token == 'LABEL':
+                            pass
+                            # geraCod(last_label+' :') # type: ignore
+                        else:
+                            geraCod(lmark+' :')
+                            lmark = geraLabel()
                 
 
                     relTEMP = geraTemp()
@@ -119,9 +122,10 @@ def parser(tokens: List[str], lexemas: List[str]):
                     ifTRUE = geraLabel()
                     
                     if lexOPREL:
-                        if last_token != 'WHILE' or last_token != 'ELSE':
-                            #print(lmark)
-                            geraCod('goto '+lmark+' :')# type: ignore
+                        if last_token != 'WHILE' and last_token != 'IF' and last_token != 'LABEL':
+
+                            geraCod('goto '+ifTRUE+' :')# type: ignore
+                            last_go_to = ifTRUE
                             lexOPREL = False
                             if last_token == 'IF':
                                 last_label = ifTRUE
@@ -136,7 +140,6 @@ def parser(tokens: List[str], lexemas: List[str]):
                 lexOPREL = match(token)
                 if token == 'ID' or token == 'NUM':
                     matchs.append('Relational expressions ok')
-# --------------------------------------
                     lexRIGHT = match(token)
                    
                     relTEMP = geraTemp()
@@ -159,7 +162,7 @@ def parser(tokens: List[str], lexemas: List[str]):
             elif token in ['ATRIB_ADD', 'ATRIB_SUB']:
                 lexOPA = combined_assignment_operator()
                 
-                #match(token)
+
                 if token == 'ID' or token == 'NUM':
                     if token == 'ID':
                         lexEXP_RIGHT = check_id()
@@ -177,20 +180,20 @@ def parser(tokens: List[str], lexemas: List[str]):
                 check_semicolon()
                 return lexID
             # else:
-            #     return False
-            else:
-                errors.append(f'Expected "ID", but received {token}')
+            #     errors.append(f'Expected "ID", but received {token}')
 
 
     def check_semicolon() -> None:
         matchs.append('SEMICOLON ok')
         match('SEMICOLON')
         if token_index >= token_count:
-            print('Fim do código')
+            print('\nFim do código')
 
 
+    whilemark = ''
+    while_go_to = ''
     def check_while() -> bool:
-        nonlocal lmark, ifFALSE, last_token
+        nonlocal lmark, ifFALSE, last_token, whilemark, while_go_to
         last_token = token
         match('WHILE')
         matchs.append('WHILE ok')
@@ -198,7 +201,6 @@ def parser(tokens: List[str], lexemas: List[str]):
             match('LPAREN')
             matchs.append('LPAREN ok')
             if token == 'ID':
-                #check_id()
                 relTEMP = check_id()
                 if token == 'RPAREN':
                     match('RPAREN')
@@ -208,9 +210,11 @@ def parser(tokens: List[str], lexemas: List[str]):
                         matchs.append('LBRACE ok')
                         ifFALSE = geraLabel()
                         geraCod('while '+relTEMP+' goto '+ifFALSE) # type: ignore
+                        whilemark = ifFALSE
                         ifTRUE = geraLabel()
                         geraCod('goto '+ifTRUE+' :')
-                        lmark = ifTRUE
+                        while_go_to = ifTRUE
+                        
                         print(' ')
                         if token == 'ID':
                             check_id()
@@ -221,6 +225,7 @@ def parser(tokens: List[str], lexemas: List[str]):
                                     check_else()
                                 analyze_list(token)
                         if token == 'RBRACE':
+                            geraCod(while_go_to+' :')
                             matchs.append('RBRACE WHILE ok')
                             if token_index + 1 < token_count:
                                 match('RBRACE')
@@ -239,14 +244,13 @@ def parser(tokens: List[str], lexemas: List[str]):
     ifTRUE = ''
     ifmark = ''
     def check_if() -> None:
-        nonlocal relTEMP, ifTRUE, ifFALSE, lmark, ifmark 
+        nonlocal relTEMP, ifTRUE, ifFALSE, lmark, ifmark , last_token, last_go_to
         last_token = token
         match('IF')
         matchs.append('IF ok')
         if token == 'LPAREN':
             match('LPAREN')
             matchs.append('LPAREN ok')
-# ------------------------------------------------------------
             relTEMP = check_id()
             if token == 'RPAREN':
                 match('RPAREN')
@@ -254,15 +258,12 @@ def parser(tokens: List[str], lexemas: List[str]):
                 if token == 'LBRACE':
                     matchs.append('LBRACE ok')
                     match('LBRACE')
-#  ------------------------------------------------------------
                     if last_token =='':
-                        ifFALSE = geraLabel()
-                        
+                        ifFALSE = geraLabel()                 
                     geraCod('if '+relTEMP+' goto '+ifFALSE) # type: ignore
-
+                    last_go_to = ifFALSE
                     lmark = ifTRUE
                     ifTRUE = geraLabel()
-
                     geraCod('goto '+ifTRUE+' :')
                     ifmark = ifTRUE
                     print(' ')
@@ -308,8 +309,6 @@ def parser(tokens: List[str], lexemas: List[str]):
         opn = match('NUM')
         matchs.append('NUM ok')
         return opn
-        check_basic_arithmetic_expressions()
-        check_relational_expressions()
 
 
     def check_basic_arithmetic_expressions():
@@ -361,11 +360,13 @@ def parser(tokens: List[str], lexemas: List[str]):
 
 
     def check_var() -> None:
-        match('VAR')
+        var = match('VAR')
         matchs.append('VAR ok')
         if token in ['INT', 'STR', 'REAL', 'BOOL']:
-            match(token)
-            check_id()
+            type_var =  match(token)
+            id_var = check_id()
+            geraCod(var+ ' = '+type_var+' '+id_var)
+            print(' ')
 
 
     def show_list_checks() -> None:
