@@ -37,14 +37,12 @@ def parser(tokens: List[str], lexemas: List[str]):
 
     def match(expected_token: str) :
         nonlocal token, token_index
-        lexema = None
+        lexema = ''
         if token == expected_token:
             lexema = lexemas[token_index]
             token_index += 1
             if token_index < token_count:
                 token = tokens[token_index]
-            # else:
-            #     token = None
         else:
             errors.append(f"Expected '{expected_token}', but found '{token}'")
         return lexema
@@ -70,15 +68,20 @@ def parser(tokens: List[str], lexemas: List[str]):
     lexOPREL = ''
     last_label = ''
     last_go_to= ''
+    lexARI = ''
+    lexARI_RIGHT = ''
+    aft_comma = ''
     def check_id():
-        nonlocal relTEMP, ifTRUE, ifFALSE, lmark, last_token, lexOPREL, last_label, ifmark, last_go_to
+        nonlocal relTEMP, ifTRUE, ifFALSE, lmark, last_token, lexOPREL, last_label, ifmark, last_go_to, lexARI, lexARI_RIGHT, aft_comma
+
+        lexEXP_RIGHT = ''
         
         if token == 'ID':
             lexID = match('ID')
             matchs.append('ID ok')
             if token == 'COMMA':
                 match('COMMA')
-                check_id()
+                aft_comma = check_id()
             elif token == 'ATRIB':
                 match('ATRIB')
                 matchs.append('ATRIB ok')
@@ -114,8 +117,18 @@ def parser(tokens: List[str], lexemas: List[str]):
                 
 
                     relTEMP = geraTemp()
+
                     if lexOPA:
-                        geraCod(relTEMP+ ' = '+lexEXP_LEFT+lexOPA+lexEXP_RIGHT)# type: ignore
+                        if lexARI:
+                            relTEMP = geraTemp()
+                            geraCod(relTEMP+' = '+lexEXP_RIGHT+lexARI+lexARI_RIGHT) # type: ignore
+                            lexARI = False
+                            lexARI_temp = relTEMP
+                            relTEMP = geraTemp()
+                            geraCod(relTEMP+ ' = '+lexEXP_LEFT+lexOPA+lexARI_temp)# type: ignore
+
+                        else:
+                            geraCod(relTEMP+ ' = '+lexEXP_LEFT+lexOPA+lexEXP_RIGHT)# type: ignore
                     else: 
                         geraCod(relTEMP+ ' = '+lexEXP_LEFT) # type: ignore
                     geraCod(lexID+' = '+relTEMP) # type: ignore
@@ -150,10 +163,10 @@ def parser(tokens: List[str], lexemas: List[str]):
                         f"Relational expressions expected a variable, but received {token}")
                     exit()
             elif token in ['ADD', 'SUB', 'MUL', 'DIV', 'POW']:
-                match(token)
+                lexARI = match(token)
                 if token == 'ID' or token == 'NUM':
                     matchs.append('Arithmetic expressions ok')
-                    match(token)
+                    lexARI_RIGHT = match(token)
                 else:
                     errors.append(
                         f"Arithmetic expressions expected a variable, but received {token}")
@@ -353,19 +366,16 @@ def parser(tokens: List[str], lexemas: List[str]):
             matchs.append('LPAREN ok')
 
 
-    def check_relational_expressions() -> None:
-        if token in ['LT', 'GT', 'LTE', 'GTE', 'EQ']:
-            matchs.append('Relational expressions ok')
-            match(token)
-
-
     def check_var() -> None:
         var = match('VAR')
         matchs.append('VAR ok')
         if token in ['INT', 'STR', 'REAL', 'BOOL']:
             type_var =  match(token)
             id_var = check_id()
-            geraCod(var+ ' = '+type_var+' '+id_var)
+            if not aft_comma:
+                geraCod(var+ ' = '+type_var+' '+id_var) # type: ignore
+            else:
+                geraCod(var+ ' = '+type_var+' '+ aft_comma) # type: ignore
             print(' ')
 
 
