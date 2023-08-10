@@ -1,4 +1,6 @@
-number_to_convert: int = 1423
+number_to_convert: int = 1432052
+# 1423
+# 1432052
 
 def base_converter(base: int, power_meter: int):
     number: int= base ** power_meter
@@ -7,36 +9,33 @@ def base_converter(base: int, power_meter: int):
 
 def converter(base: int, number_to_convert: int):
     power_meter: int = 0
-    counter: int = 1
-
     base_number = base_converter(base, power_meter)
-
+   
     while base_number < number_to_convert:
         power_meter += 1
         new_number = base_converter(base, power_meter)
         if new_number > number_to_convert:
             power_meter -= 1
-            break
+            list = [base, power_meter, number_to_convert]
+            return list
         else:
             base_number = new_number
 
-    new_m = (counter * (base_number))
+
+def basex(list):
+    counter: int = 1
+    base_number = (counter * (list[0]**list[1]))
     while base_number < number_to_convert:
-        print(f'counter {counter}')
         counter += 1
-        new_m2 = (counter * (base_number))
-        if new_m2 > number_to_convert:
-            power_meter -= 1
-            break
+        print(o := (counter * (list[0]**list[1])))
+        new_base_number = (counter * (list[0]**list[1]))
+        if new_base_number > number_to_convert:
+            list[1] -= 1
+            print(f'{list[2]} - {counter-1}x{list[0]}^{list[1]+1} = {(result := number_to_convert - base_number)}')
+            counter-=1
+            list[2] = result
         else:
-            new_m = new_m2
-
-    print(f'{base} {power_meter} ')
+            base_number = new_base_number
+            
     
-    print(new_m)
-
-    return base_number
-
-
-
-print(converter(16, number_to_convert))
+basex(converter(16, number_to_convert))
