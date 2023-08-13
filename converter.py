@@ -2,36 +2,50 @@
 from os import system
 
 
-def clear(): 
+def clear() -> None: 
     return system('cls')
 
 
-def title():
+def title() -> None:
+    clear()
     width: int = 49
     print('=' * width)
     print(title := 'CONVERSOR'.center(width))
     print('=' * width)
 
 
-def start ():
+def cls_title() -> None:
     clear()
     title()
-    print('\nEscolha a o tipo de conversão que deseja fazer\nDecimal para:\n\n1 - Hexadecial\n2 - Octal\n3 - Binária\n')
-    choice: int = int(input('Digite a sua escolha: '))
-    base: int = 0
 
-    if choice == 1:
+
+def choose_base() -> int:
+    base: int = 0
+    print('\nEscolha o tipo de conversão que deseja fazer:')
+    print('1 - Hexadecimal')
+    print('2 - Octal')
+    print('3 - Binária')
+    choice: int = int(input('Digite a sua escolha: '))
+    if choice not in [1, 2, 3]:
+        title()
+        choice = choose_base()
+
+    if choice == 1 or choice == 16:
         base = 16
-    elif choice == 2:
+    elif choice == 2 or choice == 8:
         base = 8
-    elif choice == 3:
+    elif choice == 3 or choice == 2:
         base = 2
 
-    clear()
-    title()
+    return base
+
+
+def start ():
+    cls_title()
+    base: int =  choose_base()
+    cls_title()
     number: int = int(input('\nAgora digite o número que deseja converter: '))
-    clear()
-    title()
+    cls_title()
     print(result := '\nO resultado é: '+''.join(custom_map((converter_division(converter(base, number))))))
 
 
@@ -87,7 +101,7 @@ def converter_division(list):
             return list[3]
         
 
-def custom_map(lst) -> list:
+def custom_map(lst) -> list[str]:
     mapping: dict = {
         10: 'A',
         11: 'B',
@@ -97,7 +111,7 @@ def custom_map(lst) -> list:
         15: 'F'
     }
     
-    def apply_mapping(item):
+    def apply_mapping(item) -> str:
         if item in mapping:
             return str(mapping[item])
         return str(item)
