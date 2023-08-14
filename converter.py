@@ -1,4 +1,24 @@
+"""
+Desenvolver um aplicativo que converta de decimal para as bases hexadecial, octal e binária pelo método da subtração. O aplicativo deve demonstrar os cálculos passo a passo com o exemplo abaixo:
 
+Subtração
+
+1432052 = 1432052 - 1*16^5 = 383476
+
+383476 = 383476 - 5*16^4 = 55796
+
+55796 = 55796 - D*16^3 = 2548
+
+2548 = 2548 - 9*16^2 = 244
+
+244 = 244 - F*16^1 = 4
+
+4 = 4 - 4*16^0 = 0
+
+1432052 = 15D9F4
+
+Decimal --> Hexadecimal
+"""
 from os import system
 
 
@@ -12,11 +32,6 @@ def title() -> None:
     print('=' * width)
     print(title := 'CONVERSOR'.center(width))
     print('=' * width)
-
-
-def cls_title() -> None:
-    clear()
-    title()
 
 
 def choose_base() -> int:
@@ -40,12 +55,12 @@ def choose_base() -> int:
     return base
 
 
-def start ():
-    cls_title()
-    base: int =  choose_base()
-    cls_title()
+def start() -> None:
+    title()
+    base: int = choose_base()
+    title()
     number: int = int(input('\nAgora digite o número que deseja converter: '))
-    cls_title()
+    title()
     print(result := '\nO resultado é: '+''.join(custom_map((converter_division(converter(base, number))))))
 
 
@@ -54,7 +69,7 @@ def base_converter(base: int, power_meter: int) -> int:
     return number
 
 
-def converter(base: int, number_to_convert: int):
+def converter(base: int, number_to_convert: int) -> list:
     power_meter: int = 0
     base_number: int = base_converter(base, power_meter)
    
@@ -69,7 +84,7 @@ def converter(base: int, number_to_convert: int):
             base_number: int = converted_number
 
 
-def converter_division(list):
+def converter_division(list) -> int:
     counter: int = 1
     base_number: int = (counter * (list[0]**list[1]))
     number_to_convert: int = list[2]
@@ -111,7 +126,7 @@ def custom_map(lst) -> list[str]:
         15: 'F'
     }
     
-    def apply_mapping(item) -> str:
+    def apply_mapping(item) -> list[str]:
         if item in mapping:
             return str(mapping[item])
         return str(item)
