@@ -22,7 +22,7 @@ Decimal --> Hexadecimal
 from os import system
 
 
-def clear() -> None: 
+def clear(): 
     return system('cls')
 
 
@@ -34,34 +34,49 @@ def title() -> None:
     print('=' * width)
 
 
-def choose_base() -> int:
+def choose_base(choice: int) -> int:
     base: int = 0
+    if choice == 1:
+        base = 16
+    elif choice == 2:
+        base = 8
+    elif choice == 3:
+        base = 2
+    return base
+
+
+def menu_base() -> int:
+    title()
+    choice:int = 0
     print('\nEscolha o tipo de conversão que deseja fazer:')
     print('1 - Hexadecimal')
     print('2 - Octal')
     print('3 - Binária')
-    choice: int = int(input('Digite a sua escolha: '))
+    try:
+        choice: int = int(input('Digite a sua escolha: '))
+    except:
+            choice = menu_base()
     if choice not in [1, 2, 3]:
-        title()
-        choice = choose_base()
+            choice = menu_base()
+    return choice
 
-    if choice == 1 or choice == 16:
-        base = 16
-    elif choice == 2 or choice == 8:
-        base = 8
-    elif choice == 3 or choice == 2:
-        base = 2
 
-    return base
+def get_number_converter() -> int:
+    title()
+    number: int = 0
+    try:
+        number = int(input('\nAgora digite o número que deseja converter: '))
+    except:
+        number = get_number_converter()
+    return number
 
 
 def start() -> None:
     title()
-    base: int = choose_base()
+    base: int = choose_base(menu_base())
+    number:int = get_number_converter()
     title()
-    number: int = int(input('\nAgora digite o número que deseja converter: '))
-    title()
-    print(result := '\nO resultado é: '+''.join(custom_map((converter_division(converter(base, number))))))
+    print('\nO resultado é: '+''.join(custom_map((converter_division(converter(base, number))))))
 
 
 def base_converter(base: int, power_meter: int) -> int:
@@ -69,7 +84,7 @@ def base_converter(base: int, power_meter: int) -> int:
     return number
 
 
-def converter(base: int, number_to_convert: int) -> list:
+def converter(base: int, number_to_convert: int):
     power_meter: int = 0
     base_number: int = base_converter(base, power_meter)
    
@@ -84,7 +99,7 @@ def converter(base: int, number_to_convert: int) -> list:
             base_number: int = converted_number
 
 
-def converter_division(list) -> int:
+def converter_division(list):
     counter: int = 1
     base_number: int = (counter * (list[0]**list[1]))
     number_to_convert: int = list[2]
@@ -126,7 +141,7 @@ def custom_map(lst) -> list[str]:
         15: 'F'
     }
     
-    def apply_mapping(item) -> list[str]:
+    def apply_mapping(item) -> str:
         if item in mapping:
             return str(mapping[item])
         return str(item)
